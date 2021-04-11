@@ -1,5 +1,6 @@
 ﻿using GenericRepo.Dapper.Wrapper.Domain;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -15,19 +16,16 @@ namespace GenericRepo.Dapper.Wrapper
 			var entityPropertyRemovalResponse = namesOfPropertiesToBeExcluded.Any() ?
 				RemoveProperties(GetEntityProperties(typeof(TEntity).GetProperties()), namesOfPropertiesToBeExcluded) :
 				new EntityPropertyRemovalResponse { Properties = GetEntityProperties(typeof(TEntity).GetProperties()) };
-			if (entityPropertyRemovalResponse.Error != null)
-				return new EntityPropertyProcessorResponse { Error = entityPropertyRemovalResponse.Error };
-
-			return new EntityPropertyProcessorResponse { Result = FormatQueryStatementBody(queryStatement, entityPropertyRemovalResponse.Properties) };
+			return entityPropertyRemovalResponse.Error != null ? new EntityPropertyProcessorResponse { Error = entityPropertyRemovalResponse.Error } : new EntityPropertyProcessorResponse { Result = FormatQueryStatementBody(queryStatement, entityPropertyRemovalResponse.Properties) };
 		}
 
 		public static EntityPropertyRemovalResponse RemoveProperties(List<string> listOfProperties, params string[] namesOfPropertiesToBeExcluded)
 		{
 			foreach (var property in namesOfPropertiesToBeExcluded)
 			{
-				var inputIsNotValid = InputIsNotValid(listOfProperties, property);
-				if (inputIsNotValid.Item1)
-					return new EntityPropertyRemovalResponse { Error = new Error { Message = inputIsNotValid.Item2 } };
+				var (item1, item2) = InputIsNotValid(listOfProperties, property);
+				if (item1)
+					return new EntityPropertyRemovalResponse { Error = new Error { Message = item2 } };
 
 				var propertyIndex = listOfProperties.FindIndex(word => word.Equals(property, StringComparison.CurrentCultureIgnoreCase));
 				if (propertyIndex == -1) return new EntityPropertyRemovalResponse
@@ -51,29 +49,32 @@ namespace GenericRepo.Dapper.Wrapper
 
 		private static string FormatQueryStatementBody(QueryStatement queryStatement, List<string> properties)
 		{
-			if (queryStatement == QueryStatement.InsertQuery)
+			switch (queryStatement)
 			{
-				var tableFields = string.Join(",", properties);
-				var modelFields = $"@{ string.Join(", @", properties) }";
-				return $"({tableFields}) values ({modelFields})";
-			}
-			if (queryStatement == QueryStatement.UpdateQuery)
-			{
-				var updateQuery = new StringBuilder("");
-				properties.ForEach(property => { updateQuery.Append($"{property}=@{property}, "); });
-				updateQuery.Remove(updateQuery.Length - 2, 2);
+				case QueryStatement.InsertQuery:
+				{
+					var tableFields = string.Join(",", properties);
+					var modelFields = $"@{ string.Join(", @", properties) }";
+					return $"({tableFields}) values ({modelFields})";
+				}
+				case QueryStatement.UpdateQuery:
+				{
+					var updateQuery = new StringBuilder("");
+					properties.ForEach(property => { updateQuery.Append($"{property}=@{property}, "); });
+					updateQuery.Remove(updateQuery.Length - 2, 2);
 
-				return updateQuery.ToString();
+					return updateQuery.ToString();
+				}
+				default:
+					return string.Empty;
 			}
-			return string.Empty;
 		}
 
-		private static (bool, string) InputIsNotValid(List<string> listOfProperties, string property)
+		private static (bool, string) InputIsNotValid(ICollection listOfProperties, string property)
 		{
 			if (listOfProperties == null) return (true, "Invalid list of Properties entered.");
 			if (listOfProperties.Count == 0) return (true, "list of Properties entered is empty.");
-			if (string.IsNullOrWhiteSpace(property)) return (true, "Invalid property name, check your property names.");
-			return (false, null);
+			return string.IsNullOrWhiteSpace(property) ? (true, "Invalid property name, check your property names.") : (false, null);
 		}
 	}
 }

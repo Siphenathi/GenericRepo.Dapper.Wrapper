@@ -3,11 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageId>Nathi.GenericDapperRepo.Wrapper</PackageId>
+    <Authors>Siphenathi Nathi Pantshwa</Authors>
+    <Description>Library to access data from database in a faster and efficient way using Generic Repository and Dapper.
+</Description>
+    <RepositoryUrl>https://github.com/Siphenathi/GenericRepo.Dapper.Wrapper</RepositoryUrl>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageTags>Dapper, Generic, Repository, Data Access</PackageTags>
+    <PackageReleaseNotes>This is a first version of this library, therefore it consist of just basic CRUD for now.</PackageReleaseNotes>
+    <Company>Siphenathi Nathi Pantshwa</Company>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.78" />
-    <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   </ItemGroup>
 

@@ -9,11 +9,11 @@ namespace GenericRepo.Client
 	public class PersonRepository : IPersonRepository
 	{
 		private readonly IRepository<Person> _personRepository;
-		private const string _tableName = "Persons";
-		private const string _primaryKeyName = "Code";
+		private const string TableName = "Persons";
+		private const string PrimaryKeyName = "Code";
 		public PersonRepository(string connectionString)
 		{
-			_personRepository = new Repository<Person>(_tableName, connectionString);
+			_personRepository = new Repository<Person>(TableName, connectionString);
 		}
 
 		public async Task<IEnumerable<Person>> GetAllPeopleAsync()
@@ -23,25 +23,25 @@ namespace GenericRepo.Client
 
 		public async Task<Person> GetPersonAsync(int code)
 		{
-			return await _personRepository.GetAsync(code, _primaryKeyName);
+			return await _personRepository.GetAsync(code, PrimaryKeyName);
 		}
 
 		public async Task<int> AddPersonAsync(Person person)
 		{
-			return await _personRepository.InsertAsync(person, _primaryKeyName);
+			return await _personRepository.InsertAsync(person, PrimaryKeyName);
 		}
 
 		public async Task<int> UpdatePersonAsync(Person person)
 		{
-			var numberOfRowsAffected = await _personRepository.UpdateAsync(_primaryKeyName, person, _primaryKeyName, "Id_Number");
-			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{_tableName[0..^1]} with {_primaryKeyName} [{person.Code}] could not be found.");
+			var numberOfRowsAffected = await _personRepository.UpdateAsync(PrimaryKeyName, person, PrimaryKeyName, "Id_Number");
+			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[0..^1]} with {PrimaryKeyName} [{person.Code}] could not be found.");
 			return numberOfRowsAffected;
 		}
 
 		public async Task<int> DeletePersonAsync(int code)
 		{
-			var numberOfRowsAffected = await _personRepository.DeleteAsync(code, _primaryKeyName);
-			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{_tableName[0..^1]} with {_primaryKeyName} [{code}] could not be found.");
+			var numberOfRowsAffected = await _personRepository.DeleteAsync(code, PrimaryKeyName);
+			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[0..^1]} with {PrimaryKeyName} [{code}] could not be found.");
 			return numberOfRowsAffected;
 		}
 	}

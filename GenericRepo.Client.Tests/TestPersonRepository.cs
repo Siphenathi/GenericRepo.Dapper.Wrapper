@@ -12,26 +12,26 @@ namespace GenericRepo.Client.Tests
 	[TestFixture]
 	public class TestPersonService
 	{
-		private const string _connectionString = "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Initial Catalog=AMSDatabase";
-		private TransactionScope scope;
+		private const string ConnectionString = "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Initial Catalog=AMSDatabase";
+		private TransactionScope _scope;
 
 		[SetUp]
 		public void SetUp()
 		{
-			scope = new TransactionScope();
+			_scope = new TransactionScope();
 		}
 
 		[TearDown]
 		public void TearDown()
 		{
-			scope.Dispose();
+			_scope.Dispose();
 		}
 
 		[Test]
 		public async Task GetAllPeople_WhenCalled_ShouldReturnAllPeople()
 		{
 			//Arrange
-			var sut = CreatePersonRepository(_connectionString);
+			var sut = CreatePersonRepository(ConnectionString);
 
 			//Act
 			var actual = await sut.GetAllPeopleAsync();
@@ -46,7 +46,7 @@ namespace GenericRepo.Client.Tests
 		public async Task GetPerson_WhenCalled_ShouldReturnPerson()
 		{
 			//Arrange
-			var sut = CreatePersonRepository(_connectionString);
+			var sut = CreatePersonRepository(ConnectionString);
 
 			//Act
 			var actual = await sut.GetPersonAsync(1);
@@ -59,7 +59,7 @@ namespace GenericRepo.Client.Tests
 		public void GetPerson_WhenCalledWithNonExistenceCode_ShouldThrowException()
 		{
 			//Arrange
-			var sut = CreatePersonRepository(_connectionString);
+			var sut = CreatePersonRepository(ConnectionString);
 
 			//Act
 			var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.GetPersonAsync(1264949526));
@@ -72,7 +72,7 @@ namespace GenericRepo.Client.Tests
 		public async Task AddPerson_WhenCalledWithPerson_ShouldSavePerson()
 		{
 			var expectedNumberOfRowsToBeAffected = 1;
-			var sut = CreatePersonRepository(_connectionString);
+			var sut = CreatePersonRepository(ConnectionString);
 			var person = new Person
 			{
 				Name = "Siphenathi",
@@ -91,7 +91,7 @@ namespace GenericRepo.Client.Tests
 		public async Task UpdatePerson_WhenCalledWithExistingPerson_ShouldUpdatePerson()
 		{
 			//Arrange
-			var sut = CreatePersonRepository(_connectionString);
+			var sut = CreatePersonRepository(ConnectionString);
 			var person = new Person
 			{
 				Code = 72,
@@ -111,7 +111,7 @@ namespace GenericRepo.Client.Tests
 		public void UpdatePerson_WhenCalledWithNonExistentPerson_ShouldThrowArException()
 		{
 			//Arrange
-			var sut = CreatePersonRepository(_connectionString);
+			var sut = CreatePersonRepository(ConnectionString);
 			var person = new Person
 			{
 				Code = 7000,
@@ -131,7 +131,7 @@ namespace GenericRepo.Client.Tests
 		public void DeletePerson_WhenCalledWithNonExistentCode_ShouldThrowException()
 		{
 			//Arrange 
-			var sut = CreatePersonRepository(_connectionString);
+			var sut = CreatePersonRepository(ConnectionString);
 			var code = 1000;
 
 			//Act
@@ -145,7 +145,7 @@ namespace GenericRepo.Client.Tests
 		public async Task DeletePerson_WhenCalledWithCode_ShouldDeletePerson()
 		{
 			//Arrange 
-			var sut = CreatePersonRepository(_connectionString);
+			var sut = CreatePersonRepository(ConnectionString);
 			var numberOfRowsAffected = 1;
 			var code = 72;
 
