@@ -1,2 +1,2 @@
 # GenericRepo.Dapper.Wrapper
-This is a generic repository that uses dapper to fetch data from Dabase.
+Provides a simple Generic Repository to fluently map model properties with database columns using Dapper.
