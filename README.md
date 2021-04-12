@@ -18,7 +18,8 @@ version 1.1.0
 - System.Data.SqlClient 
 
 ## Download
-![image](https://user-images.githubusercontent.com/32597717/114359849-afa0e180-9b74-11eb-99ca-6fa6efc487d9.png)
+![image](https://user-images.githubusercontent.com/32597717/114360191-0b6b6a80-9b75-11eb-9e73-04dac3bc6d05.png)
+
 
 ## Usage
 - These are functions available in version 1.1.0
@@ -64,6 +65,9 @@ public async Task<IEnumerable<Person>> GetAllPeopleAsync()
   return await _personRepository.GetAllAsync();
 }
 ```
+- For other available functions check the interface provided at the top
+> If you have any questions, suggestions, bugs or want to contribute, please don't hesitate to contact :-
+- spantshwa.lukho@gmail.com
 
 
 
