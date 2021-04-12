@@ -21,7 +21,7 @@ version 1.0.0
 ![image](https://user-images.githubusercontent.com/32597717/114327603-05a46380-9b3a-11eb-84d0-64d4b89b02de.png)
 
 ## Usage
-These are functions available with version 1.0.0
+- These are functions available in version 1.0.0
 
 Key | Description
 ------------ | ------------
@@ -41,3 +41,29 @@ public interface IRepository<T>
   Task<int> DeleteAsync(object id, string primaryKeyName);
 }
 ```
+- Update, Insert and Delete return number of rows affected after executing the method
+- This is how your specific repository declaration should look like
+
+```C#
+public class PersonRepository
+{
+  private readonly IRepository<Person> _personRepository;
+  private const string TableName = "Persons";
+  private const string PrimaryKeyName = "Code";
+  
+  public PersonRepository(string connectionString)
+  {
+    _personRepository = new Repository<Person>(TableName, connectionString);
+  }
+}
+```
+- Your function implementation should look like this :
+```C#
+public async Task<IEnumerable<Person>> GetAllPeopleAsync()
+{
+  return await _personRepository.GetAllAsync();
+}
+```
+
+
+
