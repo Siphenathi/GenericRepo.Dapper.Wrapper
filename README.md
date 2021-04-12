@@ -28,7 +28,8 @@ public interface IRepository<T>
   Task<IEnumerable<T>> GetAllAsync();
   Task<T> GetAsync(object id, string primaryKeyName); //Id is a table key, primarykeyName is a key Column name
   Task<IEnumerable<T>> GetAllAsync(object id, string primaryKeyName);
-  Task<int> InsertAsync(T entity, params string[] namesOfPropertiesToBeExcluded); //namesOfProperties.... names of keys/columns that are auto generated or do not want to provide values for
+  Task<int> InsertAsync(T entity, params string[] namesOfPropertiesToBeExcluded);
+  //namesOfProperties.... names of keys/columns that are auto generated or do not want to provide values for
   Task<int> UpdateAsync(string primaryKeyName, T entity, params string[] namesOfPropertiesToBeExcluded);
   Task<int> DeleteAsync(object id, string primaryKeyName);
 }
