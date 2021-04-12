@@ -18,7 +18,7 @@ version 1.1.0
 - System.Data.SqlClient 
 
 ## Download
-![image](https://user-images.githubusercontent.com/32597717/114327603-05a46380-9b3a-11eb-84d0-64d4b89b02de.png)
+![image](https://user-images.githubusercontent.com/32597717/114359849-afa0e180-9b74-11eb-99ca-6fa6efc487d9.png)
 
 ## Usage
 - These are functions available in version 1.1.0
