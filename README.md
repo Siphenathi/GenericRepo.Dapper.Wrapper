@@ -65,7 +65,7 @@ public async Task<IEnumerable<Person>> GetAllPeopleAsync()
   return await _personRepository.GetAllAsync();
 }
 ```
-- For other available functions check the interface provided at the top
+- For other available functions check IRepository interface provided at the top
 > If you have any questions, suggestions, bugs or want to contribute, please don't hesitate to contact :-
 - spantshwa.lukho@gmail.com
 
