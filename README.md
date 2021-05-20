@@ -11,7 +11,7 @@ Provides a simple Generic Repository to fluently map model properties with datab
 
 NuGet |
 ------------ |
-version 1.1.0
+version 1.2.0 
 
 ## Dependencies
 - Dapper
