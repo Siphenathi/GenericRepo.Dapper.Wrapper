@@ -10,15 +10,23 @@
     <RepositoryUrl>https://github.com/Siphenathi/GenericRepo.Dapper.Wrapper</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Siphenathi/GenericRepo.Dapper.Wrapper</PackageProjectUrl>
     <PackageTags>Dapper, Generic, Repository, Data Access</PackageTags>
-    <PackageReleaseNotes>Changed package Id</PackageReleaseNotes>
+    <PackageReleaseNotes>Refactored logic for namesOfPropertiesToBeExcluded</PackageReleaseNotes>
     <Company>Siphenathi Nathi Pantshwa</Company>
-    <Version>1.2.0</Version>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>1.2.1</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIcon>data-repository-icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.78" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\data-repository-icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
