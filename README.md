@@ -28,7 +28,7 @@ Key | Description
 ------------ | ------------
 Id | Id is a table key
 primarykeyName | primarykeyName is a key Column name.
-namesOfPropertiesToBeExcluded | names of columns that cannot be changed/columns that are keys. You can provide as many as you want.
+namesOfPropertiesToBeExcluded | names of columns that it's value cannot be changed/columns that are keys ie Composite key, Id Number, Foreign Key, Candidate Key etc. You can provide as many as you want.
 T entity | T represent the table/entity.
 
 ```C#
