@@ -1,5 +1,5 @@
 # GenericRepo.Dapper.Wrapper
-Provides a simple Generic Repository to fluently map model properties with database columns using Dapper to interect with the Db.
+Provides a simple Generic Repository to fluently map model properties with database columns using Dapper to interact with the Db.
 
 ---
 ## Introduction
