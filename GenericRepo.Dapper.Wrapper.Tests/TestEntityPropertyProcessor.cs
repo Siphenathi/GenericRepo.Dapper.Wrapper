@@ -109,7 +109,7 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 		}
 
 		[Test]
-		public void GetFormattedQueryStatementBody_WhenCalledWithInsertQueryStatement_ShouldReturnInsertFormattedQueryStatementBody()
+		public void FormatQueryStatementBody_WhenCalledWithInsertQueryStatement_ShouldReturnInsertFormattedQueryStatementBody()
 		{
 			//Arrange
 			var expectedListOfProperties = new EntityPropertyProcessorResponse
@@ -118,31 +118,31 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 			};
 
 			//Act
-			var actual = EntityPropertyProcessor.GetFormattedQueryStatementBody<TestingObject>(QueryStatement.InsertQuery);
+			var actual = EntityPropertyProcessor.FormatQueryStatementBody<TestingObject>(QueryStatement.InsertQuery);
 
 			//Assert
 			actual.Should().BeEquivalentTo(expectedListOfProperties);
 		}
 
 		[Test]
-		public void GetFormattedQueryStatementBody_WhenCalledWithInsertQueryStatementAndPropertyNameToBeExcluded_ShouldReturnInsertFormattedQueryStatementBodyWithoutExcludedPropertyNames()
+		public void FormatQueryStatementBody_WhenCalledWithInsertQueryStatementAndPropertyNameToBeExcluded_ShouldReturnInsertFormattedQueryStatementBodyWithoutExcludedPropertyNames()
 		{
 			//Arrange
-			var propertyToBeRemoved = "Id";
+			const string propertyToBeRemoved = "Id";
 			var expectedList = new EntityPropertyProcessorResponse
 			{
 				Result = "(Name,Age) values (@Name, @Age)"
 			};
 
 			//Act
-			var actual = EntityPropertyProcessor.GetFormattedQueryStatementBody<TestingObject>(QueryStatement.InsertQuery, propertyToBeRemoved);
+			var actual = EntityPropertyProcessor.FormatQueryStatementBody<TestingObject>(QueryStatement.InsertQuery, propertyToBeRemoved);
 
 			//Assert
 			actual.Should().BeEquivalentTo(expectedList);
 		}
 
 		[Test]
-		public void GetFormattedQueryStatementBody_WhenCalledWithUpdateQueryStatement_ShouldReturnUpdateFormattedQueryStatementBody()
+		public void FormatQueryStatementBody_WhenCalledWithUpdateQueryStatement_ShouldReturnUpdateFormattedQueryStatementBody()
 		{
 			//Arrange
 			var expectedListOfProperties = new EntityPropertyProcessorResponse
@@ -151,7 +151,7 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 			};
 
 			//Act
-			var actual = EntityPropertyProcessor.GetFormattedQueryStatementBody<TestingObject>(QueryStatement.UpdateQuery);
+			var actual = EntityPropertyProcessor.FormatQueryStatementBody<TestingObject>(QueryStatement.UpdateQuery);
 
 			//Assert
 			actual.Should().BeEquivalentTo(expectedListOfProperties);

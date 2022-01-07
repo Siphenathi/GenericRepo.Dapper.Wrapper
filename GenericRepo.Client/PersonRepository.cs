@@ -33,7 +33,7 @@ namespace GenericRepo.Client
 
 		public async Task<int> UpdatePersonAsync(Person person)
 		{
-			var numberOfRowsAffected = await _personRepository.UpdateAsync(PrimaryKeyName, person, PrimaryKeyName, "Id_Number");
+			var numberOfRowsAffected = await _personRepository.UpdateAsync(PrimaryKeyName, person, "Id_Number");
 			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[0..^1]} with {PrimaryKeyName} [{person.Code}] could not be found.");
 			return numberOfRowsAffected;
 		}

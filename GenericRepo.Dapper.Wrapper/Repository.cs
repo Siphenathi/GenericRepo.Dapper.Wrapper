@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GenericRepo.Dapper.Wrapper
@@ -22,7 +23,6 @@ namespace GenericRepo.Dapper.Wrapper
 		{
 			using IDbConnection connection = GetConnection();
 			var result = await connection.QueryAsync<TEntity>($"Select * from {_tableName}");
-
 			return result;
 		}
 
@@ -30,7 +30,6 @@ namespace GenericRepo.Dapper.Wrapper
 		{
 			using IDbConnection connection = GetConnection();
 			var result = await connection.QueryAsync<TEntity>($"Select * from {_tableName} where {primaryKeyName}=@Id", new { Id = id });
-
 			return result;
 		}
 
@@ -47,7 +46,7 @@ namespace GenericRepo.Dapper.Wrapper
 
 		public async Task<int> InsertAsync(TEntity entity, params string[] namesOfPropertiesToBeExcluded)
 		{
-			var entityPropertyProcessorResponse = EntityPropertyProcessor.GetFormattedQueryStatementBody<TEntity>(QueryStatement.InsertQuery, namesOfPropertiesToBeExcluded);
+			var entityPropertyProcessorResponse = EntityPropertyProcessor.FormatQueryStatementBody<TEntity>(QueryStatement.InsertQuery, namesOfPropertiesToBeExcluded);
 			if (entityPropertyProcessorResponse.Error != null)
 				throw new Exception(entityPropertyProcessorResponse.Error.Message);
 
@@ -58,7 +57,8 @@ namespace GenericRepo.Dapper.Wrapper
 
 		public async Task<int> UpdateAsync(string primaryKeyName, TEntity entity, params string[] namesOfPropertiesToBeExcluded)
 		{
-			var entityPropertyProcessorResponse = EntityPropertyProcessor.GetFormattedQueryStatementBody<TEntity>(QueryStatement.UpdateQuery, namesOfPropertiesToBeExcluded);
+			namesOfPropertiesToBeExcluded = AddToList(namesOfPropertiesToBeExcluded, primaryKeyName, false).ToArray();
+			var entityPropertyProcessorResponse = EntityPropertyProcessor.FormatQueryStatementBody<TEntity>(QueryStatement.UpdateQuery, namesOfPropertiesToBeExcluded);
 			if (entityPropertyProcessorResponse.Error != null)
 				throw new Exception(entityPropertyProcessorResponse.Error.Message);
 
@@ -77,6 +77,14 @@ namespace GenericRepo.Dapper.Wrapper
 		private SqlConnection GetConnection()
 		{
 			return new SqlConnection(_connectionString);
+		}
+
+		private static IEnumerable<string> AddToList(IEnumerable<string> collection, string value, bool allowDuplicate)
+		{
+			var currentList = collection.ToList();
+			if (!allowDuplicate && currentList.Contains(value)) return currentList;
+			currentList.Add(value);
+			return currentList;
 		}
 	}
 }
