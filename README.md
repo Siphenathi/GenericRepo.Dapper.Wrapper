@@ -18,7 +18,7 @@ version 1.2.1
 - System.Data.SqlClient 
 
 ## Download
-![image](https://user-images.githubusercontent.com/32597717/114360191-0b6b6a80-9b75-11eb-9e73-04dac3bc6d05.png)
+![image](https://user-images.githubusercontent.com/32597717/148602606-6ed12a6f-6d39-4f3d-bc65-04045f54abd3.png)
 
 
 ## Usage
