@@ -1,5 +1,5 @@
 # GenericRepo.Dapper.Wrapper
-Provides a simple Generic Repository to fluently map model properties with database columns using Dapper to interect with the Db.
+Provides a simple Generic Repository to fluently map model properties with database columns using Dapper to interact with the Db.
 
 ---
 ## Introduction
@@ -11,14 +11,14 @@ Provides a simple Generic Repository to fluently map model properties with datab
 
 NuGet |
 ------------ |
-version 1.2.0 
+version 1.2.1 
 
 ## Dependencies
 - Dapper
 - System.Data.SqlClient 
 
 ## Download
-![image](https://user-images.githubusercontent.com/32597717/114360191-0b6b6a80-9b75-11eb-9e73-04dac3bc6d05.png)
+![image](https://user-images.githubusercontent.com/32597717/148602606-6ed12a6f-6d39-4f3d-bc65-04045f54abd3.png)
 
 
 ## Usage
@@ -28,7 +28,7 @@ Key | Description
 ------------ | ------------
 Id | Id is a table key
 primarykeyName | primarykeyName is a key Column name.
-namesOfPropertiesToBeExcluded | names of keys/columns that are auto generated or do not want to provide values for. You can provide as many as you want.
+namesOfPropertiesToBeExcluded | names of columns that their values cannot be changed/columns that are keys ie Composite key, Id Number, Foreign Key, Candidate Key etc. You can provide as many as you want.
 T entity | T represent the table/entity.
 
 ```C#
