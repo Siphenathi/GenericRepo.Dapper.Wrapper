@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GenericRepo.Dapper.Wrapper.Tests
+﻿namespace GenericRepo.Dapper.Wrapper.Tests.Model
 {
 	public class TestingObject
 	{

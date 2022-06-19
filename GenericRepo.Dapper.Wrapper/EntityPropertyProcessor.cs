@@ -16,7 +16,8 @@ namespace GenericRepo.Dapper.Wrapper
 			var entityPropertyRemovalResponse = namesOfPropertiesToBeExcluded.Any() ?
 				RemoveProperties(GetEntityProperties(typeof(TEntity).GetProperties()), namesOfPropertiesToBeExcluded) :
 				new EntityPropertyRemovalResponse { Properties = GetEntityProperties(typeof(TEntity).GetProperties()) };
-			return entityPropertyRemovalResponse.Error != null ? new EntityPropertyProcessorResponse { Error = entityPropertyRemovalResponse.Error } : new EntityPropertyProcessorResponse { Result = FormatQueryStatementBody(queryStatement, entityPropertyRemovalResponse.Properties) };
+			return entityPropertyRemovalResponse.Error != null ? new EntityPropertyProcessorResponse { Error = entityPropertyRemovalResponse.Error } 
+				: new EntityPropertyProcessorResponse { Result = FormatQueryStatementBody(queryStatement, entityPropertyRemovalResponse.Properties) };
 		}
 
 		public static EntityPropertyRemovalResponse RemoveProperties(List<string> listOfProperties, params string[] namesOfPropertiesToBeExcluded)

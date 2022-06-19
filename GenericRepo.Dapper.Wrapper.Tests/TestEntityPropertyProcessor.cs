@@ -2,6 +2,7 @@
 using GenericRepo.Dapper.Wrapper.Domain;
 using NUnit.Framework;
 using System.Collections.Generic;
+using GenericRepo.Dapper.Wrapper.Tests.Model;
 
 namespace GenericRepo.Dapper.Wrapper.Tests
 {
