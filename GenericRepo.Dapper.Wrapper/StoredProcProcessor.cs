@@ -7,11 +7,13 @@ using Dapper;
 
 namespace GenericRepo.Dapper.Wrapper
 {
-	public class StoredProcProcessor
+	public class StoredProcProcessor : IStoredProcProcessor
 	{
 		private readonly string _connectionString;
 		public StoredProcProcessor(string connectionString)
 		{
+			if (string.IsNullOrWhiteSpace(connectionString))
+				throw new ArgumentNullException(nameof(connectionString));
 			_connectionString = connectionString;
 		}
 

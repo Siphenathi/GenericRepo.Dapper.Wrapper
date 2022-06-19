@@ -32,6 +32,33 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 		}
 
 		[TestCase("")]
+		[TestCase(" ")]
+		[TestCase(null)]
+		public void CreateStoredProcProcessor_GivenInvalidConnectionString_ShouldThrowException(string connectingString)
+		{
+			//Arrange
+			//Act
+			var exception = Assert.Throws<ArgumentNullException>(() =>
+			{
+				_ = new StoredProcProcessor(connectingString);
+			});
+
+			//Assert
+			exception.Message.Should().Be("Value cannot be null. (Parameter 'connectionString')");
+		}
+
+		[Test]
+		public void CreateStoredProcProcessor_GivenValidConnectionString_ShouldStoredProcProcessor()
+		{
+			//Arrange
+			//Act
+			var actual = new StoredProcProcessor(ConnectionString);
+
+			//Assert
+			actual.Should().BeOfType<StoredProcProcessor>();
+		}
+
+		[TestCase("")]
 		[TestCase(null)]
 		public void GetDataAsync_GivenInvalidProcNameAndParameter_ShouldThrowAnError(string procName)
 		{
@@ -147,11 +174,6 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 			actual.Should().Be(10);
 		}
 
-		private StoredProcProcessor CreateStoredProcProcessor()
-		{
-			return new StoredProcProcessor(ConnectionString);
-		}
-
 		private static string GetJsonData()
 		{
 			return "[{\"Name\":\"name 1\",\"Surname\":\"Surname 1\",\"JobTitleId\":1,\"DateOfBirth\":\"0001-01-01T00:00:00\"}" +
@@ -201,6 +223,11 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 		{
 			return new[] { new DataColumn("Name"), new DataColumn("Surname"),
 				new DataColumn("JobTitleId"), new DataColumn("DateOfBirth") };
+		}
+
+		private IStoredProcProcessor CreateStoredProcProcessor()
+		{
+			return new StoredProcProcessor(ConnectionString);
 		}
 	}
 }
