@@ -23,7 +23,7 @@ namespace GenericRepo.Dapper.Wrapper
 		/// <returns>
 		/// Available table records
 		/// </returns>
-		public async Task<IEnumerable<T>> GetDataAsync<T>(string procName, DynamicParameters parameters = null)
+		async Task<IEnumerable<T>> IStoredProcProcessor.GetDataAsync<T>(string procName, DynamicParameters parameters)
 		{
 			using IDbConnection connection = GetConnection();
 			return await connection.QueryAsync<T>(procName, parameters, commandType: CommandType.StoredProcedure);
@@ -35,7 +35,7 @@ namespace GenericRepo.Dapper.Wrapper
 		/// <returns>
 		/// Number of rows affected by calling the stored procedure with provided parameters
 		/// </returns>
-		public async Task<int> ExecuteAsync(string procName, DynamicParameters parameters)
+		async Task<int> IStoredProcProcessor.ExecuteAsync(string procName, DynamicParameters parameters)
 		{
 			using IDbConnection connection = GetConnection();
 			return await connection.ExecuteAsync(procName, parameters, commandType: CommandType.StoredProcedure);
@@ -47,7 +47,7 @@ namespace GenericRepo.Dapper.Wrapper
 		/// <returns>
 		/// Number of rows affected by calling the stored procedure with provided parameters
 		/// </returns>
-		public async Task<int> ExecuteInBulkAsync(string procName, object @object )
+		async Task<int> IStoredProcProcessor.ExecuteInBulkAsync(string procName, object @object )
 		{
 			using IDbConnection connection = GetConnection();
 			return await connection.ExecuteAsync(procName, @object, commandType: CommandType.StoredProcedure);

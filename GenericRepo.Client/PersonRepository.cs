@@ -34,14 +34,14 @@ namespace GenericRepo.Client
 		public async Task<int> UpdatePersonAsync(Person person)
 		{
 			var numberOfRowsAffected = await _personRepository.UpdateAsync(PrimaryKeyName, person, "Id_Number");
-			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[0..^1]} with {PrimaryKeyName} [{person.Code}] could not be found.");
+			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[..^1]} with {PrimaryKeyName} [{person.Code}] could not be found.");
 			return numberOfRowsAffected;
 		}
 
 		public async Task<int> DeletePersonAsync(int code)
 		{
 			var numberOfRowsAffected = await _personRepository.DeleteAsync(code, PrimaryKeyName);
-			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[0..^1]} with {PrimaryKeyName} [{code}] could not be found.");
+			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[..^1]} with {PrimaryKeyName} [{code}] could not be found.");
 			return numberOfRowsAffected;
 		}
 	}

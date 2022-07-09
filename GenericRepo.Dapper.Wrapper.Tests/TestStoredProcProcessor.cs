@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace GenericRepo.Dapper.Wrapper.Tests
 {
 	[TestFixture]
-	public class TestStoredProc
+	public class TestStoredProcProcessor
 	{
 		public readonly string ConnectionString = "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Initial Catalog=CodeWorks";
 		private TransactionScope _scope;
