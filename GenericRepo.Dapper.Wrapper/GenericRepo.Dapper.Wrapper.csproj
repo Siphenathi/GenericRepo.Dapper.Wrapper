@@ -5,16 +5,19 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageId>GenericDapperRepo.Wrapper</PackageId>
     <Authors>Siphenathi Nathi Pantshwa</Authors>
-    <Description>Library to access data from database in a faster and efficient way using Generic Repository and Dapper.
+    <Description>Library to access and manipulate data in the database in a fastest and efficient way using Generic Repository and Dapper.
 </Description>
     <RepositoryUrl>https://github.com/Siphenathi/GenericRepo.Dapper.Wrapper</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Siphenathi/GenericRepo.Dapper.Wrapper</PackageProjectUrl>
     <PackageTags>Dapper, Generic, Repository, Data Access</PackageTags>
-    <PackageReleaseNotes>Refactored logic for namesOfPropertiesToBeExcluded</PackageReleaseNotes>
+    <PackageReleaseNotes>Added feature to manipulate Database data using stored procedures</PackageReleaseNotes>
     <Company>Siphenathi Nathi Pantshwa</Company>
-    <Version>1.2.1</Version>
+    <Version>2.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>data-repository-icon.png</PackageIcon>
+    <Copyright />
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,10 +27,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\data-repository-icon.png">
+    <None Include="..\..\data-repository-icon.png" Link="icons\data-repository-icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="icons\" />
   </ItemGroup>
 
 </Project>
