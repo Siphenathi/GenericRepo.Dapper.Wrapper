@@ -7,22 +7,26 @@ Provides a simple Generic Repository to fluently map model properties with datab
 > This keeps your model clean of mapping attributes. 
 > Also you do not have to rewrite SQL query each time you want to interact with different table through Dapper.
 > This guy handles all of that by providing functions that wrap specific dapper functions into generic functions. 
-> Therefore, add that into what we call generic repository.
+> It does not only end there, this library allows us to also manipulate data in the database using stored procedures.
+> Therefore, add that into what we call generic repository. 
 
 NuGet |
 ------------ |
-version 1.2.1 
+version 2.0.0
 
 ## Dependencies
 - Dapper
 - System.Data.SqlClient 
+- Newtonsoft.Json
 
 ## Download
-![image](https://user-images.githubusercontent.com/32597717/148602606-6ed12a6f-6d39-4f3d-bc65-04045f54abd3.png)
+```
+Install-Package GenericDapperRepo.Wrapper -Version 2.0.0
+```
 
 
 ## Usage
-- These are functions available in version 1.1.0
+- These are functions available in version 2.0.0
 
 Key | Description
 ------------ | ------------
@@ -42,7 +46,7 @@ public interface IRepository<T>
   Task<int> DeleteAsync(object id, string primaryKeyName);
 }
 ```
-- Update, Insert and Delete return number of rows affected after executing the method
+- Update, Insert and Delete returns number of rows affected after executing the method
 - This is how your specific repository declaration should look like
 
 ```C#
@@ -66,6 +70,58 @@ public async Task<IEnumerable<Person>> GetAllPeopleAsync()
 }
 ```
 - For other available functions check IRepository interface provided at the top
+
+# Working with Stored Procedures
+## Usage
+Key | Description
+------------ | ------------
+connectionString | A connection string is a string that specifies information about a data source, means of connecting to it.
+procName | Name of the stored procedure that will be using to query/manipulate data.
+parameters | These are key-value pairs that are required when calling stored procedure.
+object | Key-value pairs/object that consist of a name(s) that are tied to the stored procdure variable(s).
+T entity | T is the model.
+
+```C#
+public interface IStoredProcProcessor
+{
+  Task<IEnumerable<T>> GetDataAsync<T>(string procName, DynamicParameters parameters = null);
+  Task<int> ExecuteAsync(string procName, DynamicParameters parameters);
+  Task<int> ExecuteInBulkAsync(string procName, object @object );
+}
+```
+- Parameters are optional base on the created stored procedure
+- This is the only way to create StoredProcProcessor instance : 
+```C#
+  IStoredProcProcessor storedProcProcessor = new StoredProcProcessor(ConnectionString);
+```
+- GetDataAsync returns number of records in a list
+- ExecuteAsync() and ExecuteInBulkAsync() return number of rows affected after execution
+
+## Configuration to consume ExecuteInBulkAsync()
+- **NB** : This function works with table-valued parameter approach
+```C#
+async Task<int> ExecuteInBulkAsync(string procName, object @object );
+```
+- Constructing an object has been made easy by the use of a utility class called **DataTableProcessor**. It is not a must to use this class
+```C#
+public static class DataTableProcessor
+{
+  public static DataTable MapToDataTable<T>(List<T> list); //maps any model into DataTable
+  public static DataTable MapToDataTable(string jsonObject); //maps json data into DataTable
+}
+```
+```C#
+  var listOfEmployees = ListOfEmployees();  // data type : List<RegisterEmployeeModel>
+  var dataTable = DataTableProcessor.MapToDataTable(listOfEmployees);
+            // OR
+  var dataTable = DataTableProcessor.MapToDataTable(GetJsonData()); //takes json data
+  
+  var obj = new { employeeType = dataTable };
+  var results = await sut.ExecuteInBulkAsync(storedProcName, obj);
+```
+- **NB** : **employeeType** is the variable name in the stored procedure. This name must match exactly the variable name in the store procedure. Variable name is case sensitive.
+- You can add more than one property inside the object as long as your stored procedure takes those arguments(parameters)
+
 > If you have any questions, suggestions, bugs or want to contribute, please don't hesitate to contact :-
 - spantshwa.lukho@gmail.com
 
