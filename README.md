@@ -98,7 +98,7 @@ public interface IStoredProcProcessor
 - ExecuteAsync() and ExecuteInBulkAsync() return number of rows affected after execution
 
 ## Configuration to consume ExecuteInBulkAsync()
-- **NB** : This function works with [table-valued parameter](https://docs.microsoft.com/en-us/sql/relational-databases/tables/use-table-valued-parameters-database-engine?view=sql-server-ver16) approach
+- **NB** : This function works with [table-valued parameter](https://docs.microsoft.com/en-us/sql/relational-databases/tables/use-table-valued-parameters-database-engine?view=sql-server-ver16) approach.
 ```C#
 async Task<int> ExecuteInBulkAsync(string procName, object @object );
 ```
