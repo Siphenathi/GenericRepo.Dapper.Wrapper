@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GenericRepo.Dapper.Wrapper
+namespace GenericRepo.Dapper.Wrapper.Interface
 {
 	public interface IRepository<T>
 	{

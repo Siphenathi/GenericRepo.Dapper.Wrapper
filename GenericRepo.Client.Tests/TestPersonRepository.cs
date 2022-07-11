@@ -56,7 +56,7 @@ namespace GenericRepo.Client.Tests
 		}
 
 		[Test]
-		public void GetPerson_WhenCalledWithNonExistenceCode_ShouldThrowException()
+		public void GetPerson_WhenCalledWithNonExistingPersonCode_ShouldThrowException()
 		{
 			//Arrange
 			var sut = CreatePersonRepository(ConnectionString);
@@ -65,7 +65,7 @@ namespace GenericRepo.Client.Tests
 			var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.GetPersonAsync(1264949526));
 
 			//Assert
-			Assert.AreEqual("Person with Code [1264949526] could not be found.", exception.Message);
+			Assert.AreEqual("dbo.Person with Code [1264949526] could not be found.", exception.Message);
 		}
 
 		[Test]
@@ -124,7 +124,7 @@ namespace GenericRepo.Client.Tests
 			var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.UpdatePersonAsync(person));
 
 			//Assert
-			Assert.AreEqual("Person with Code [7000] could not be found.", exception.Message);
+			Assert.AreEqual("dbo.Person with Code [7000] could not be found.", exception.Message);
 		}
 
 		[Test]
@@ -138,7 +138,7 @@ namespace GenericRepo.Client.Tests
 			var actual = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.DeletePersonAsync(code));
 
 			//Assert
-			actual.Message.Should().Be("Person with Code [1000] could not be found.");
+			actual.Message.Should().Be("dbo.Person with Code [1000] could not be found.");
 		}
 
 		[Test]

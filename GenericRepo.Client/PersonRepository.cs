@@ -3,13 +3,14 @@ using GenericRepo.Client.Model;
 using GenericRepo.Dapper.Wrapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GenericRepo.Dapper.Wrapper.Interface;
 
 namespace GenericRepo.Client
 {
 	public class PersonRepository : IPersonRepository
 	{
 		private readonly IRepository<Person> _personRepository;
-		private const string TableName = "Persons";
+		private const string TableName = "dbo.Persons";
 		private const string PrimaryKeyName = "Code";
 		public PersonRepository(string connectionString)
 		{

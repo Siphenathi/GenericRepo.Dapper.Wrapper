@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using GenericRepo.Dapper.Wrapper.Interface;
 
 namespace GenericRepo.Dapper.Wrapper
 {
@@ -40,7 +41,7 @@ namespace GenericRepo.Dapper.Wrapper
 			var result = await connection.QuerySingleOrDefaultAsync<TEntity>(getRecordQuery, new { Id = id });
 
 			if (result == null)
-				throw new KeyNotFoundException($"{_tableName[0..^1]} with {primaryKeyName} [{id}] could not be found.");
+				throw new KeyNotFoundException($"{_tableName[..^1]} with {primaryKeyName} [{id}] could not be found.");
 			return result;
 		}
 

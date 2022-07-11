@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GenericRepo.Dapper.Wrapper.Domain
+﻿namespace GenericRepo.Dapper.Wrapper.Domain
 {
 	public class Error
 	{

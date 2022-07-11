@@ -8,4 +8,10 @@
     <ProjectReference Include="..\GenericRepo.Dapper.Wrapper\GenericRepo.Dapper.Wrapper.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DbScript\CreateDb_Tables_With_Data.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

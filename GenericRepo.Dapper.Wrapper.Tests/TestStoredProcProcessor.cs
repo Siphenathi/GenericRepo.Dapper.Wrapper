@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
 using FluentAssertions;
+using GenericRepo.Dapper.Wrapper.Interface;
 using GenericRepo.Dapper.Wrapper.Tests.Model;
 using GenericRepo.Dapper.Wrapper.Utilities;
 using NUnit.Framework;

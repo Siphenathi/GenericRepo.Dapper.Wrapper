@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Dapper;
 
-namespace GenericRepo.Dapper.Wrapper
+namespace GenericRepo.Dapper.Wrapper.Interface
 {
 	public interface IStoredProcProcessor
 	{
