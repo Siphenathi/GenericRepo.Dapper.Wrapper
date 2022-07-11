@@ -12,7 +12,7 @@ This is a c# library that provides a simple Generic Repository to fluently map m
 
 NuGet | Support |
 ------------ | ------------
-Latest [version 2.0.0](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/#versions-body-tab) | All C# stack (.Net Core, .Net Framework, .Net Standard and many more)
+Latest [version 2.0.1](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/#versions-body-tab) | All C# stack (.Net Core, .Net Framework, .Net Standard and many more)
 
 ## Dependencies
 - Dapper
@@ -21,12 +21,11 @@ Latest [version 2.0.0](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/
 
 ## Download
 ```
-Install-Package GenericDapperRepo.Wrapper -Version 2.0.0
+Install-Package GenericDapperRepo.Wrapper -Version 2.0.1
 ```
 
 
 ## Usage
-- These are functions available in version 2.0.0
 
 Key | Description
 ------------ | ------------
@@ -53,7 +52,7 @@ public interface IRepository<T>
 public class PersonRepository
 {
   private readonly IRepository<Person> _personRepository;
-  private const string TableName = "Persons";
+  private const string TableName = "dbo.Persons";  //NB: prefix the table schema to your tableName
   private const string PrimaryKeyName = "Code";
   
   public PersonRepository(string connectionString)
