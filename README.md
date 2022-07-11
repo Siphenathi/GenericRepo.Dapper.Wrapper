@@ -1,5 +1,5 @@
 # GenericRepo.Dapper.Wrapper
-This is a c# library that provides a simple Generic Repository to fluently map model properties with database columns using Dapper to interact with the Db.
+This is a c# library that provides a simple Generic Repository to fluently map model properties with database columns using Dapper to interact with the Database.
 
 ---
 ## Introduction
@@ -12,7 +12,7 @@ This is a c# library that provides a simple Generic Repository to fluently map m
 
 NuGet |
 ------------ |
-version 2.0.0
+[version 2.0.0](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/#versions-body-tab)
 
 ## Dependencies
 - Dapper
