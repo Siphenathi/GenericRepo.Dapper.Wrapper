@@ -102,7 +102,7 @@ public interface IStoredProcProcessor
 ```C#
 async Task<int> ExecuteInBulkAsync(string procName, object @object );
 ```
-- Constructing an object has been made easy by the use of a utility/helper class called **DataTableProcessor**. This utility maps data to DataTable and feel free to use your own helper if you want to.
+- Constructing an object has been made easy by the use of a utility/helper class called **DataTableProcessor**. This utility maps data to DataTable but feel free to use your own helper if you want to.
 ```C#
 public static class DataTableProcessor
 {
