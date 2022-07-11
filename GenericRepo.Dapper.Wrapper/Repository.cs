@@ -62,7 +62,7 @@ namespace GenericRepo.Dapper.Wrapper
 			if (entityPropertyProcessorResponse.Error != null)
 				throw new Exception(entityPropertyProcessorResponse.Error.Message);
 
-			var updateQuery = $"update dbo.{_tableName} set {entityPropertyProcessorResponse.Result} where {primaryKeyName}=@{primaryKeyName}";
+			var updateQuery = $"update {_tableName} set {entityPropertyProcessorResponse.Result} where {primaryKeyName}=@{primaryKeyName}";
 			using IDbConnection connection = GetConnection();
 			return await connection.ExecuteAsync(updateQuery, entity);
 		}
