@@ -94,8 +94,8 @@ public interface IStoredProcProcessor
 ```C#
   IStoredProcProcessor storedProcProcessor = new StoredProcProcessor(ConnectionString);
 ```
-- GetDataAsync returns number of records in a list
-- ExecuteAsync() and ExecuteInBulkAsync() return number of rows affected after execution
+- GetDataAsync returns number of records in a list. This function is used to query data from Database
+- ExecuteAsync() and ExecuteInBulkAsync() return number of rows affected after execution. These functions are to be used for data manipulation (Add, Delete and Update)
 
 ## Configuration to consume ExecuteInBulkAsync()
 - **NB** : This function works with [table-valued parameter](https://docs.microsoft.com/en-us/sql/relational-databases/tables/use-table-valued-parameters-database-engine?view=sql-server-ver16) approach.
