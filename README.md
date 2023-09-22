@@ -83,8 +83,8 @@ T entity | T is the model.
 ```C#
 public interface IStoredProcProcessor
 {
-  Task<IEnumerable<T>> GetDataAsync<T>(string procName, DynamicParameters parameters = null);
-  Task<int> ExecuteAsync(string procName, DynamicParameters parameters);
+  Task<IEnumerable<T>> GetDataAsync<T>(string procName, object parameters = null);
+  Task<int> ExecuteAsync(string procName, object parameters);
   Task<int> ExecuteInBulkAsync(string procName, object @object );
 }
 ```

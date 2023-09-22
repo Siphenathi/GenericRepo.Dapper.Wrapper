@@ -12,7 +12,7 @@ namespace GenericRepo.Dapper.Wrapper.Interface
 		/// <returns>
 		/// Available table records
 		/// </returns>
-		Task<IEnumerable<T>> GetDataAsync<T>(string procName, DynamicParameters parameters = null);
+		Task<IEnumerable<T>> GetDataAsync<T>(string procName, object parameters = null);
 
 		/// <summary>
 		/// Execute data manipulation language (DML) stored procedures (insert, delete or update)
@@ -20,7 +20,7 @@ namespace GenericRepo.Dapper.Wrapper.Interface
 		/// <returns>
 		/// Number of rows affected by calling the stored procedure with provided parameters
 		/// </returns>
-		Task<int> ExecuteAsync(string procName, DynamicParameters parameters);
+		Task<int> ExecuteAsync(string procName, object parameters);
 
 		/// <summary>
 		/// Execute in bulk data manipulation language (DML) stored procedures (insert, delete or update) with user-defined table type

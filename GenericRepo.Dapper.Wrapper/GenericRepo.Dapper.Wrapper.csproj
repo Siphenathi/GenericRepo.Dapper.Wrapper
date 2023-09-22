@@ -10,14 +10,14 @@
     <RepositoryUrl>https://github.com/Siphenathi/GenericRepo.Dapper.Wrapper</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Siphenathi/GenericRepo.Dapper.Wrapper</PackageProjectUrl>
     <PackageTags>Dapper, Generic, Repository, Data Access</PackageTags>
-    <PackageReleaseNotes>Added feature to manipulate Database data using stored procedures</PackageReleaseNotes>
+    <PackageReleaseNotes>added generic paramter types for stored proc params</PackageReleaseNotes>
     <Company>Siphenathi Nathi Pantshwa</Company>
-    <Version>2.0.0</Version>
+    <Version>2.1.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageIcon>data-repository-icon.png</PackageIcon>
     <Copyright />
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <AssemblyVersion>2.0.1.0</AssemblyVersion>
+    <FileVersion>2.0.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

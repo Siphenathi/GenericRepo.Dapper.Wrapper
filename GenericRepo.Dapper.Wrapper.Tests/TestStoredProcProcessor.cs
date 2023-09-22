@@ -82,6 +82,7 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 			//Arrange
 			var parameters = new DynamicParameters();
 			parameters.Add("@id", 3, DbType.Int32);
+
 			var sut = CreateStoredProcProcessor();
 
 			//Act
@@ -97,12 +98,13 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 		{
 			//Arrange
 			const string storedProcName = "PS_Employee";
-			var parameters = new DynamicParameters();
-			parameters.Add("@id", 3, DbType.Int32);
+			var parameter = new DynamicParameters();
+			parameter.Add("@id", 3, DbType.Int32);
+
 			var sut = CreateStoredProcProcessor();
 
 			//Act
-			var actual = await sut.GetDataAsync<EmployeeModel>(storedProcName, parameters);
+			var actual = await sut.GetDataAsync<EmployeeModel>(storedProcName, parameter);
 
 			//Assert
 			actual.Count().Should().Be(1);
@@ -114,11 +116,13 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 			//Arrange
 			const string storedProcName = "PI_Employee";
 			var sut = CreateStoredProcProcessor();
-			var parameters = new DynamicParameters();
-			parameters.Add("@name", "Kungayo", DbType.String);
-			parameters.Add("@surname", "Kubheka", DbType.String);
-			parameters.Add("@dateOfBirth", DateTime.Now, DbType.DateTime);
-			parameters.Add("@jobTitleId", 3, DbType.Int32);
+			var parameters = new
+			{
+				Name = "Kungayo",
+				Surname = "Kubheka",
+				DateOfBirth = DateTime.Now,
+				JobTitleId = 3
+			};
 
 			//Act
 			var actual = await sut.ExecuteAsync(storedProcName, parameters);

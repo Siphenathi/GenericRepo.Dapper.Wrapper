@@ -22,9 +22,9 @@ namespace GenericRepo.Dapper.Wrapper
 		/// Get data from table using stored procedure with or without parameter
 		/// </summary>
 		/// <returns>
-		/// Available table records
+		/// table rows
 		/// </returns>
-		async Task<IEnumerable<T>> IStoredProcProcessor.GetDataAsync<T>(string procName, DynamicParameters parameters)
+		async Task<IEnumerable<T>> IStoredProcProcessor.GetDataAsync<T>(string procName, object parameters)
 		{
 			using IDbConnection connection = GetConnection();
 			return await connection.QueryAsync<T>(procName, parameters, commandType: CommandType.StoredProcedure);
@@ -34,9 +34,9 @@ namespace GenericRepo.Dapper.Wrapper
 		/// Execute data manipulation language (DML) stored procedures (insert, delete or update)
 		/// </summary>
 		/// <returns>
-		/// Number of rows affected by calling the stored procedure with provided parameters
+		/// Number of rows affected
 		/// </returns>
-		async Task<int> IStoredProcProcessor.ExecuteAsync(string procName, DynamicParameters parameters)
+		async Task<int> IStoredProcProcessor.ExecuteAsync(string procName, object parameters)
 		{
 			using IDbConnection connection = GetConnection();
 			return await connection.ExecuteAsync(procName, parameters, commandType: CommandType.StoredProcedure);
@@ -46,7 +46,7 @@ namespace GenericRepo.Dapper.Wrapper
 		/// Execute in bulk data manipulation language (DML) stored procedures (insert, delete or update) with user-defined table type
 		/// </summary>
 		/// <returns>
-		/// Number of rows affected by calling the stored procedure with provided parameters
+		/// Number of rows affected
 		/// </returns>
 		async Task<int> IStoredProcProcessor.ExecuteInBulkAsync(string procName, object @object )
 		{
