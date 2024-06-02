@@ -52,7 +52,7 @@ public interface IRepository<T>
 public class PersonRepository
 {
   private readonly IRepository<Person> _personRepository;
-  private const string TableName = "dbo.Persons";  //NB: prefix the table schema to your tableName
+  private const string TableName = "dbo.Persons";  //NB: prefix the table schema your table belongs to
   private const string PrimaryKeyName = "Code";
   
   public PersonRepository(string connectionString)
