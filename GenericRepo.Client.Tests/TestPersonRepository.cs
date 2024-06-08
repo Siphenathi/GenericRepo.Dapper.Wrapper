@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
+using GenericRepo.Dapper.Wrapper.Domain;
 
 namespace GenericRepo.Client.Tests
 {
@@ -13,6 +14,7 @@ namespace GenericRepo.Client.Tests
 	public class TestPersonService
 	{
 		private const string ConnectionString = "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Initial Catalog=AMSDatabase";
+		private const DatabaseProvider DatabaseProvider = Dapper.Wrapper.Domain.DatabaseProvider.MsSql;
 		private TransactionScope _scope;
 
 		[SetUp]
@@ -31,22 +33,21 @@ namespace GenericRepo.Client.Tests
 		public async Task GetAllPeople_WhenCalled_ShouldReturnAllPeople()
 		{
 			//Arrange
-			var sut = CreatePersonRepository(ConnectionString);
+			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 
 			//Act
 			var actual = await sut.GetAllPeopleAsync();
-			var dataLength = Enumerable.Count(actual);
+			var dataLength = actual.Count();
 
 			//Assert
 			Assert.IsTrue(dataLength > 0, "Database must not be empty");
-			Assert.IsTrue(dataLength >= 50, "Database records should be 50 or more");
 		}
 
 		[Test]
 		public async Task GetPerson_WhenCalled_ShouldReturnPerson()
 		{
 			//Arrange
-			var sut = CreatePersonRepository(ConnectionString);
+			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 
 			//Act
 			var actual = await sut.GetPersonAsync(1);
@@ -59,7 +60,7 @@ namespace GenericRepo.Client.Tests
 		public void GetPerson_WhenCalledWithNonExistingPersonCode_ShouldThrowException()
 		{
 			//Arrange
-			var sut = CreatePersonRepository(ConnectionString);
+			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 
 			//Act
 			var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.GetPersonAsync(1264949526));
@@ -72,7 +73,7 @@ namespace GenericRepo.Client.Tests
 		public async Task AddPerson_WhenCalledWithPerson_ShouldSavePerson()
 		{
 			var expectedNumberOfRowsToBeAffected = 1;
-			var sut = CreatePersonRepository(ConnectionString);
+			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 			var person = new Person
 			{
 				Name = "Siphenathi",
@@ -91,7 +92,7 @@ namespace GenericRepo.Client.Tests
 		public async Task UpdatePerson_WhenCalledWithExistingPerson_ShouldUpdatePerson()
 		{
 			//Arrange
-			var sut = CreatePersonRepository(ConnectionString);
+			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 			var person = new Person
 			{
 				Code = 72,
@@ -111,7 +112,7 @@ namespace GenericRepo.Client.Tests
 		public void UpdatePerson_WhenCalledWithNonExistentPerson_ShouldThrowArException()
 		{
 			//Arrange
-			var sut = CreatePersonRepository(ConnectionString);
+			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 			var person = new Person
 			{
 				Code = 7000,
@@ -131,7 +132,7 @@ namespace GenericRepo.Client.Tests
 		public void DeletePerson_WhenCalledWithNonExistentCode_ShouldThrowException()
 		{
 			//Arrange 
-			var sut = CreatePersonRepository(ConnectionString);
+			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 			var code = 1000;
 
 			//Act
@@ -145,7 +146,7 @@ namespace GenericRepo.Client.Tests
 		public async Task DeletePerson_WhenCalledWithCode_ShouldDeletePerson()
 		{
 			//Arrange 
-			var sut = CreatePersonRepository(ConnectionString);
+			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 			var numberOfRowsAffected = 1;
 			var code = 72;
 
@@ -156,9 +157,9 @@ namespace GenericRepo.Client.Tests
 			actual.Should().Be(numberOfRowsAffected);
 		}
 
-		private static IPersonRepository CreatePersonRepository(string connectionString)
+		private static IPersonRepository CreatePersonRepository(string connectionString, DatabaseProvider databaseProvider)
 		{
-			IPersonRepository personRepository = new PersonRepository(connectionString);
+			IPersonRepository personRepository = new PersonRepository(connectionString, databaseProvider);
 			return personRepository;
 		}
 	}

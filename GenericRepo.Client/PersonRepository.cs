@@ -3,6 +3,7 @@ using GenericRepo.Client.Model;
 using GenericRepo.Dapper.Wrapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GenericRepo.Dapper.Wrapper.Domain;
 using GenericRepo.Dapper.Wrapper.Interface;
 
 namespace GenericRepo.Client
@@ -12,9 +13,9 @@ namespace GenericRepo.Client
 		private readonly IRepository<Person> _personRepository;
 		private const string TableName = "dbo.Persons";
 		private const string PrimaryKeyName = "Code";
-		public PersonRepository(string connectionString)
+		public PersonRepository(string connectionString, DatabaseProvider databaseProvider)
 		{
-			_personRepository = new Repository<Person>(TableName, connectionString);
+			_personRepository = new Repository<Person>(TableName, connectionString, databaseProvider);
 		}
 
 		public async Task<IEnumerable<Person>> GetAllPeopleAsync()

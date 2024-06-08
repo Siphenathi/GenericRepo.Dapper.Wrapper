@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
 using FluentAssertions;
+using GenericRepo.Dapper.Wrapper.Domain;
 using GenericRepo.Dapper.Wrapper.Interface;
 using GenericRepo.Dapper.Wrapper.Tests.Model;
 using GenericRepo.Dapper.Wrapper.Utilities;
@@ -17,7 +18,8 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 	[TestFixture]
 	public class TestStoredProcProcessor
 	{
-		public readonly string ConnectionString = "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Initial Catalog=CodeWorks";
+		private readonly string ConnectionString = "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Initial Catalog=CodeWorks";
+		private readonly DatabaseProvider databaseProvider = DatabaseProvider.MsSql;
 		private TransactionScope _scope;
 
 		[SetUp]
@@ -41,7 +43,7 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 			//Act
 			var exception = Assert.Throws<ArgumentNullException>(() =>
 			{
-				_ = new StoredProcProcessor(connectingString);
+				_ = new StoredProcProcessor(connectingString, databaseProvider);
 			});
 
 			//Assert
@@ -53,7 +55,7 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 		{
 			//Arrange
 			//Act
-			var actual = new StoredProcProcessor(ConnectionString);
+			var actual = new StoredProcProcessor(ConnectionString, databaseProvider);
 
 			//Assert
 			actual.Should().BeOfType<StoredProcProcessor>();
@@ -232,7 +234,7 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 
 		private IStoredProcProcessor CreateStoredProcProcessor()
 		{
-			return new StoredProcProcessor(ConnectionString);
+			return new StoredProcProcessor(ConnectionString, databaseProvider);
 		}
 	}
 }

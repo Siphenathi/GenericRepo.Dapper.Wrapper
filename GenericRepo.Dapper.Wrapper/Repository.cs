@@ -4,9 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
 using GenericRepo.Dapper.Wrapper.Interface;
+using MySql.Data.MySqlClient;
+using Npgsql;
+using Oracle.ManagedDataAccess.Client;
 
 namespace GenericRepo.Dapper.Wrapper
 {
@@ -14,29 +18,31 @@ namespace GenericRepo.Dapper.Wrapper
 	{
 		private readonly string _tableName;
 		private readonly string _connectionString;
-		public Repository(string tableName, string connectionString)
+		private readonly DatabaseProvider _databaseProvider;
+		public Repository(string tableName, string connectionString, DatabaseProvider databaseProvider)
 		{
 			_tableName = tableName;
 			_connectionString = connectionString;
+			_databaseProvider = databaseProvider;
 		}
 
 		public async Task<IEnumerable<TEntity>> GetAllAsync()
 		{
-			using IDbConnection connection = GetConnection();
+			using var connection = GetConnection();
 			var result = await connection.QueryAsync<TEntity>($"Select * from {_tableName}");
 			return result;
 		}
 
 		public async Task<IEnumerable<TEntity>> GetAllAsync(object id, string primaryKeyName)
 		{
-			using IDbConnection connection = GetConnection();
+			using var connection = GetConnection();
 			var result = await connection.QueryAsync<TEntity>($"Select * from {_tableName} where {primaryKeyName}=@Id", new { Id = id });
 			return result;
 		}
 
 		public async Task<TEntity> GetAsync(object id, string primaryKeyName)
 		{
-			using IDbConnection connection = GetConnection();
+			using var connection = GetConnection();
 			var getRecordQuery = $"Select * from {_tableName} where {primaryKeyName}=@Id";
 			var result = await connection.QuerySingleOrDefaultAsync<TEntity>(getRecordQuery, new { Id = id });
 
@@ -52,7 +58,7 @@ namespace GenericRepo.Dapper.Wrapper
 				throw new Exception(entityPropertyProcessorResponse.Error.Message);
 
 			var insertQuery = $"Insert into {_tableName} {entityPropertyProcessorResponse.Result}";
-			using IDbConnection connection = GetConnection();
+			using var connection = GetConnection();
 			return await connection.ExecuteAsync(insertQuery, entity);
 		}
 
@@ -64,20 +70,27 @@ namespace GenericRepo.Dapper.Wrapper
 				throw new Exception(entityPropertyProcessorResponse.Error.Message);
 
 			var updateQuery = $"update {_tableName} set {entityPropertyProcessorResponse.Result} where {primaryKeyName}=@{primaryKeyName}";
-			using IDbConnection connection = GetConnection();
+			using var connection = GetConnection();
 			return await connection.ExecuteAsync(updateQuery, entity);
 		}
 
 		public async Task<int> DeleteAsync(object id, string primaryKeyName)
 		{
 			var deleteQuery = $"delete from {_tableName} where {primaryKeyName}=@Id";
-			using IDbConnection connection = GetConnection();
+			using var connection = GetConnection();
 			return await connection.ExecuteAsync(deleteQuery, new { Id = id });
 		}
 
-		private SqlConnection GetConnection()
+		private IDbConnection GetConnection()
 		{
-			return new SqlConnection(_connectionString);
+			return _databaseProvider switch
+			{
+				DatabaseProvider.MySql => new MySqlConnection(_connectionString),
+				DatabaseProvider.Oracle => new OracleConnection(_connectionString),
+				DatabaseProvider.SqLite => new SQLiteConnection(_connectionString),
+				DatabaseProvider.PostGreSql => new NpgsqlConnection(_connectionString),
+				_ => new SqlConnection(_connectionString)
+			};
 		}
 
 		private static IEnumerable<string> AddToList(IEnumerable<string> collection, string value, bool allowDuplicate)
