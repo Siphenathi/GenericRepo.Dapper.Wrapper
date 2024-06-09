@@ -64,14 +64,14 @@ public class PersonRepository
 ```
 - Database Provider names
 ```C#
-	public enum DatabaseProvider
-	{
-		MsSql = 1,
-		MySql = 2,
-		Oracle = 3,
-		SqLite = 4,
-		PostGreSql = 5
-	}
+public enum DatabaseProvider
+{
+  MsSql = 1,
+  MySql = 2,
+  Oracle = 3,
+  SqLite = 4,
+  PostGreSql = 5
+}
 ```
 - Your function implementation should look like this :
 ```C#
