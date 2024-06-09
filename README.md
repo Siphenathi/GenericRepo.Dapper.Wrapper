@@ -16,8 +16,12 @@ Latest [version 3.0.0](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/
 
 ## Dependencies
 - Dapper
-- System.Data.SqlClient 
 - Newtonsoft.Json
+- System.Data.SqlClient 
+- MySql.Data
+- Oracle.ManagedDataAccess.Core
+- System.Data.SQLite.Core
+- Npgsq
 
 ## Download
 ```
@@ -30,7 +34,7 @@ Install-Package GenericDapperRepo.Wrapper -Version 3.0.0
 Key | Description
 ------------ | ------------
 Id | Id is a table key
-primarykeyName | primarykeyName is a key Column name.
+keyName | keyName is a unique Column name ie primary key (Id, code).
 namesOfPropertiesToBeExcluded | names of columns that their values cannot be changed/columns that are keys ie Composite key, Id Number, Foreign Key, Candidate Key etc. You can provide as many as you want.
 T entity | T represent the table/entity.
 
@@ -38,11 +42,11 @@ T entity | T represent the table/entity.
 public interface IRepository<T>
 {
   Task<IEnumerable<T>> GetAllAsync();
-  Task<T> GetAsync(object id, string primaryKeyName);
-  Task<IEnumerable<T>> GetAllAsync(object id, string primaryKeyName);
+  Task<T> GetAsync(object id, string keyName);
+  Task<IEnumerable<T>> GetAllAsync(object id, string keyName);
   Task<int> InsertAsync(T entity, params string[] namesOfPropertiesToBeExcluded);
-  Task<int> UpdateAsync(string primaryKeyName, T entity, params string[] namesOfPropertiesToBeExcluded);
-  Task<int> DeleteAsync(object id, string primaryKeyName);
+  Task<int> UpdateAsync(string keyName, T entity, params string[] namesOfPropertiesToBeExcluded);
+  Task<int> DeleteAsync(object id, string keyName);
 }
 ```
 - Update, Insert and Delete returns number of rows affected after executing the method
@@ -53,7 +57,7 @@ public class PersonRepository
 {
   private readonly IRepository<Person> _personRepository;
   private const string TableName = "dbo.Persons";  //NB: prefix the table schema your table belongs to
-  private const string PrimaryKeyName = "Code";
+  private const string keyName = "Code";
 
   
   public PersonRepository(string connectionString, DatabaseProvider databaseProvider)
@@ -136,6 +140,3 @@ public static class DataTableProcessor
 
 > If you have any questions, suggestions, bugs or want to contribute, please don't hesitate to contact :-
 - spantshwa.lukho@gmail.com
-
-
-
