@@ -12,7 +12,7 @@ This is a c# library that provides a simple Generic Repository to fluently map m
 
 NuGet | Support |
 ------------ | ------------
-Latest [version 2.1.1](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/#versions-body-tab) | All C# stack (.Net Core, .Net Framework, .Net Standard and many more)
+Latest [version 3.0.0](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/#versions-body-tab) | All C# stack (.Net Core, .Net Framework, .Net Standard and many more)
 
 ## Dependencies
 - Dapper
@@ -21,7 +21,7 @@ Latest [version 2.1.1](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/
 
 ## Download
 ```
-Install-Package GenericDapperRepo.Wrapper -Version 2.1.1
+Install-Package GenericDapperRepo.Wrapper -Version 3.0.0
 ```
 
 
@@ -62,6 +62,17 @@ public class PersonRepository
   }
 }
 ```
+- Database Provider names
+```C#
+	public enum DatabaseProvider
+	{
+		MsSql = 1,
+		MySql = 2,
+		Oracle = 3,
+		SqLite = 4,
+		PostGreSql = 5
+	}
+```
 - Your function implementation should look like this :
 ```C#
 public async Task<IEnumerable<Person>> GetAllPeopleAsync()
@@ -93,7 +104,7 @@ public interface IStoredProcProcessor
 - Parameters are optional base on the created stored procedure
 - This is the only way to create StoredProcProcessor instance : 
 ```C#
-  IStoredProcProcessor storedProcProcessor = new StoredProcProcessor(ConnectionString);
+  IStoredProcProcessor storedProcProcessor = new StoredProcProcessor(ConnectionString, DatabaseProvider.MySql);
 ```
 - GetDataAsync returns number of records in a list. This function is used to query data from Database
 - ExecuteAsync() and ExecuteInBulkAsync() return number of rows affected after execution. These functions are to be used for data manipulation (Add, Delete and Update)
