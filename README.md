@@ -54,10 +54,11 @@ public class PersonRepository
   private readonly IRepository<Person> _personRepository;
   private const string TableName = "dbo.Persons";  //NB: prefix the table schema your table belongs to
   private const string PrimaryKeyName = "Code";
+
   
-  public PersonRepository(string connectionString)
+  public PersonRepository(string connectionString, DatabaseProvider databaseProvider)
   {
-    _personRepository = new Repository<Person>(TableName, connectionString);
+    _personRepository = new Repository<Person>(TableName, connectionString, databaseProvider);
   }
 }
 ```
@@ -75,6 +76,7 @@ public async Task<IEnumerable<Person>> GetAllPeopleAsync()
 Key | Description
 ------------ | ------------
 connectionString | A connection string is a string that specifies information about a data source, means of connecting to it.
+databaseProvider | Enum that contains different database provider names ie MsSql, MySql, Oracle, PostGreSql n SqLite.
 procName | Name of the stored procedure that will be using to query/manipulate data.
 parameters | These are key-value pairs that are required when calling stored procedure.
 object | Key-value pairs/object that consist of a name(s) that are tied to the stored procdure variable(s).
