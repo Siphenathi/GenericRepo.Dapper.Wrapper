@@ -15,7 +15,7 @@ This is a c# library that provides a simple Generic Repository to fluently map m
 
 NuGet | Support |
 ------------ | ------------
-Latest [version 3.0.0](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/#versions-body-tab) | All C# stack (.Net Core, .Net Framework, .Net Standard and many more)
+Latest [version 3.0.1](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/#versions-body-tab) | All C# stack (.Net Core, .Net Framework, .Net Standard and many more)
 
 ## Dependencies
 
@@ -30,7 +30,7 @@ Latest [version 3.0.0](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/
 ## Download
 
 ```
-Install-Package GenericDapperRepo.Wrapper -Version 3.0.0
+Install-Package GenericDapperRepo.Wrapper -Version 3.0.1
 ```
 
 ## Usage
