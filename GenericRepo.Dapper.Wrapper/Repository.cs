@@ -33,27 +33,27 @@ namespace GenericRepo.Dapper.Wrapper
 			return result;
 		}
 
-		public async Task<IEnumerable<TEntity>> GetAllAsync(object id, string primaryKeyName)
+		public async Task<IEnumerable<TEntity>> GetAllAsync(object id, string keyName)
 		{
 			using var connection = GetConnection();
-			var result = await connection.QueryAsync<TEntity>($"Select * from {_tableName} where {primaryKeyName}=@Id", new { Id = id });
+			var result = await connection.QueryAsync<TEntity>($"Select * from {_tableName} where {keyName}=@Id", new { Id = id });
 			return result;
 		}
 
-		public async Task<TEntity> GetAsync(object id, string primaryKeyName)
+		public async Task<TEntity> GetAsync(object id, string keyName)
 		{
 			using var connection = GetConnection();
-			var getRecordQuery = $"Select * from {_tableName} where {primaryKeyName}=@Id";
+			var getRecordQuery = $"Select * from {_tableName} where {keyName}=@Id";
 			var result = await connection.QuerySingleOrDefaultAsync<TEntity>(getRecordQuery, new { Id = id });
 
 			if (result == null)
-				throw new KeyNotFoundException($"{_tableName[..^1]} with {primaryKeyName} [{id}] could not be found.");
+				throw new KeyNotFoundException($"{_tableName[..^1]} with {keyName} [{id}] could not be found.");
 			return result;
 		}
 
-		public async Task<int> InsertAsync(TEntity entity, params string[] namesOfPropertiesToBeExcluded)
+		public async Task<int> InsertAsync(TEntity entity, params string[] namesOfColumnsToBeExcluded)
 		{
-			var entityPropertyProcessorResponse = EntityPropertyProcessor.FormatQueryStatementBody<TEntity>(QueryStatement.InsertQuery, namesOfPropertiesToBeExcluded);
+			var entityPropertyProcessorResponse = EntityPropertyProcessor.FormatQueryStatementBody<TEntity>(QueryStatement.InsertQuery, namesOfColumnsToBeExcluded);
 			if (entityPropertyProcessorResponse.Error != null)
 				throw new Exception(entityPropertyProcessorResponse.Error.Message);
 
@@ -62,21 +62,21 @@ namespace GenericRepo.Dapper.Wrapper
 			return await connection.ExecuteAsync(insertQuery, entity);
 		}
 
-		public async Task<int> UpdateAsync(string primaryKeyName, TEntity entity, params string[] namesOfPropertiesToBeExcluded)
+		public async Task<int> UpdateAsync(string keyName, TEntity entity, params string[] namesOfColumnsToBeExcluded)
 		{
-			namesOfPropertiesToBeExcluded = AddToList(namesOfPropertiesToBeExcluded, primaryKeyName, false).ToArray();
-			var entityPropertyProcessorResponse = EntityPropertyProcessor.FormatQueryStatementBody<TEntity>(QueryStatement.UpdateQuery, namesOfPropertiesToBeExcluded);
+			namesOfColumnsToBeExcluded = AddToList(namesOfColumnsToBeExcluded, keyName, false).ToArray();
+			var entityPropertyProcessorResponse = EntityPropertyProcessor.FormatQueryStatementBody<TEntity>(QueryStatement.UpdateQuery, namesOfColumnsToBeExcluded);
 			if (entityPropertyProcessorResponse.Error != null)
 				throw new Exception(entityPropertyProcessorResponse.Error.Message);
 
-			var updateQuery = $"update {_tableName} set {entityPropertyProcessorResponse.Result} where {primaryKeyName}=@{primaryKeyName}";
+			var updateQuery = $"update {_tableName} set {entityPropertyProcessorResponse.Result} where {keyName}=@{keyName}";
 			using var connection = GetConnection();
 			return await connection.ExecuteAsync(updateQuery, entity);
 		}
 
-		public async Task<int> DeleteAsync(object id, string primaryKeyName)
+		public async Task<int> DeleteAsync(object id, string keyName)
 		{
-			var deleteQuery = $"delete from {_tableName} where {primaryKeyName}=@Id";
+			var deleteQuery = $"delete from {_tableName} where {keyName}=@Id";
 			using var connection = GetConnection();
 			return await connection.ExecuteAsync(deleteQuery, new { Id = id });
 		}

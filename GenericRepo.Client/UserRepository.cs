@@ -27,6 +27,11 @@ namespace GenericRepo.Client
 			return await _userRepository.GetAsync(id, PrimaryKeyName);
 		}
 
+		public async Task<User> GetUserByUsernameAsync(string username)
+		{
+			return await _userRepository.GetAsync(username, "username");
+		}
+
 		public async Task<int> AddUserAsync(User user)
 		{
 			return await _userRepository.InsertAsync(user);

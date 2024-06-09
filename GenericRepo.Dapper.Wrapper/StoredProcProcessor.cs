@@ -17,6 +17,7 @@ namespace GenericRepo.Dapper.Wrapper
 	{
 		private readonly string _connectionString;
 		private readonly DatabaseProvider _databaseProvider;
+		private readonly DatabaseProvider obj = DatabaseProvider.MySql;
 		public StoredProcProcessor(string connectionString, DatabaseProvider databaseProvider)
 		{
 			if (string.IsNullOrWhiteSpace(connectionString))

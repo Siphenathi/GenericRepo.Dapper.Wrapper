@@ -55,6 +55,19 @@ namespace GenericRepo.Client.Tests
 		}
 
 		[Test]
+		public async Task GetUserByUsername_WhenCalled_ShouldReturnUser()
+		{
+			//Arrange
+			var sut = CreateUserRepository(ConnectionString, DatabaseProvider);
+
+			//Act
+			var actual = await sut.GetUserByUsernameAsync("saider");
+
+			//Assert
+			actual.Should().NotBeNull();
+		}
+
+		[Test]
 		public void GetUser_WhenCalledWithNonExistingUserCode_ShouldThrowException()
 		{
 			//Arrange
