@@ -11,7 +11,7 @@ namespace GenericRepo.Client
 	{
 		private readonly IRepository<User> _userRepository;
 		private const string TableName = "Users";
-		private const string PrimaryKeyName = "Id";
+		private const string KeyName = "Id";
 		public UserRepository(string connectionString, DatabaseProvider databaseProvider)
 		{
 			_userRepository = new Repository<User>(TableName, connectionString, databaseProvider);
@@ -24,7 +24,7 @@ namespace GenericRepo.Client
 
 		public async Task<User> GetUserAsync(string id)
 		{
-			return await _userRepository.GetAsync(id, PrimaryKeyName);
+			return await _userRepository.GetAsync(id, KeyName);
 		}
 
 		public async Task<User> GetUserByUsernameAsync(string username)
@@ -39,15 +39,15 @@ namespace GenericRepo.Client
 
 		public async Task<int> UpdateUserAsync(User user)
 		{
-			var numberOfRowsAffected = await _userRepository.UpdateAsync(PrimaryKeyName, user, "Id");
-			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[..^1]} with {PrimaryKeyName} [{user.Id}] could not be found.");
+			var numberOfRowsAffected = await _userRepository.UpdateAsync(KeyName, user, "Id");
+			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[..^1]} with {KeyName} [{user.Id}] could not be found.");
 			return numberOfRowsAffected;
 		}
 
 		public async Task<int> DeleteUserAsync(string id)
 		{
-			var numberOfRowsAffected = await _userRepository.DeleteAsync(id, PrimaryKeyName);
-			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[..^1]} with {PrimaryKeyName} [{id}] could not be found.");
+			var numberOfRowsAffected = await _userRepository.DeleteAsync(id, KeyName);
+			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[..^1]} with {KeyName} [{id}] could not be found.");
 			return numberOfRowsAffected;
 		}
 	}

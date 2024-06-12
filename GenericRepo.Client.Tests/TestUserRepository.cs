@@ -68,19 +68,6 @@ namespace GenericRepo.Client.Tests
 		}
 
 		[Test]
-		public void GetUser_WhenCalledWithNonExistingUserCode_ShouldThrowException()
-		{
-			//Arrange
-			var sut = CreateUserRepository(ConnectionString, DatabaseProvider);
-
-			//Act
-			var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.GetUserAsync("0f59895c-b3a3-48e9-b6d3-1e492e987bd1"));
-
-			//Assert
-			Assert.AreEqual("User with Id [0f59895c-b3a3-48e9-b6d3-1e492e987bd1] could not be found.", exception.Message);
-		}
-
-		[Test]
 		[Ignore("Transaction scope is not working")]
 		public async Task AddUser_WhenCalledWithUser_ShouldSaveUser()
 		{

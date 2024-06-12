@@ -45,9 +45,6 @@ namespace GenericRepo.Dapper.Wrapper
 			using var connection = GetConnection();
 			var getRecordQuery = $"Select * from {_tableName} where {keyName}=@Id";
 			var result = await connection.QuerySingleOrDefaultAsync<TEntity>(getRecordQuery, new { Id = id });
-
-			if (result == null)
-				throw new KeyNotFoundException($"{_tableName[..^1]} with {keyName} [{id}] could not be found.");
 			return result;
 		}
 
