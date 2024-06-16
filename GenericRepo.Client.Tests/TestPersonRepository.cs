@@ -70,6 +70,25 @@ namespace GenericRepo.Client.Tests
 		}
 
 		[Test]
+		public async Task InsertOrUpdatePerson_WhenCalledWithNonExistingPerson_ShouldSavePerson()
+		{
+			const int expectedNumberOfRowsToBeAffected = 1;
+			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
+			var person = new Person
+			{
+				Name = "Person1",
+				Surname = "Person1",
+				Id_Number = "9501045305082"
+			};
+
+			//Act
+			var actual = await sut.InsertOrUpdatePersonAsync(person);
+
+			//Assert
+			actual.Should().Be(expectedNumberOfRowsToBeAffected);
+		}
+
+		[Test]
 		public async Task AddPerson_WhenCalledWithPerson_ShouldSavePerson()
 		{
 			var expectedNumberOfRowsToBeAffected = 1;
@@ -78,7 +97,7 @@ namespace GenericRepo.Client.Tests
 			{
 				Name = "Siphenathi",
 				Surname = "Pantshwa",
-				Id_Number = "9501045404082"
+				Id_Number = "9501045507082"
 			};
 
 			//Act
@@ -118,7 +137,7 @@ namespace GenericRepo.Client.Tests
 				Code = 7000,
 				Name = "Nathi",
 				Surname = "Pantshwa Hlanga",
-				Id_Number = "9x01045404082"
+				Id_Number = "9x01045707082"
 			};
 
 			//act

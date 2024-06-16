@@ -7,9 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericRepo.Dapper.Wrapper"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericRepo.Dapper.Wrapper.Tests", "..\GenericRepo.Dapper.Wrapper.Tests\GenericRepo.Dapper.Wrapper.Tests.csproj", "{183B6D19-AD28-4507-995F-56ECE28648C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericRepo.Client", "..\GenericRepo.Client\GenericRepo.Client.csproj", "{AEF1BCCC-DF3B-4F82-9DF3-187A2C538C1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericRepo.Client", "..\GenericRepo.Client\GenericRepo.Client.csproj", "{AEF1BCCC-DF3B-4F82-9DF3-187A2C538C1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericRepo.Client.Tests", "..\GenericRepo.Client.Tests\GenericRepo.Client.Tests.csproj", "{DC2E022B-0895-48D4-9410-2B92C271ECAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericRepo.Client.Tests", "..\GenericRepo.Client.Tests\GenericRepo.Client.Tests.csproj", "{DC2E022B-0895-48D4-9410-2B92C271ECAD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2E0DE828-C79F-4C13-B024-918D4C7C72FA}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

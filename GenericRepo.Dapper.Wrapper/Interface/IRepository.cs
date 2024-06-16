@@ -10,6 +10,7 @@ namespace GenericRepo.Dapper.Wrapper.Interface
 		Task<IEnumerable<T>> GetAllAsync(object id, string keyName);
 		Task<int> InsertAsync(T entity, params string[] namesOfColumnsToBeExcluded);
 		Task<int> UpdateAsync(string keyName, T entity, params string[] namesOfColumnsToBeExcluded);
+		Task<int> InsertOrUpdateAsync(object id, string keyName, T entity, params string[] namesOfColumnsToBeExcluded);
 		Task<int> DeleteAsync(object id, string keyName);
 	}
 }

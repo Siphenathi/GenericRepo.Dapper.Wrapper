@@ -40,6 +40,14 @@ namespace GenericRepo.Dapper.Wrapper
 			return result;
 		}
 
+		public async Task<int> InsertOrUpdateAsync(object id, string keyName, TEntity entity, params string[] namesOfColumnsToBeExcluded)
+		{
+			var entityWeLookFor = await GetAsync(id, keyName);
+			return entityWeLookFor == null ? 
+				await InsertAsync(entity, namesOfColumnsToBeExcluded) : 
+				await UpdateAsync(keyName, entity, namesOfColumnsToBeExcluded);
+		}
+
 		public async Task<TEntity> GetAsync(object id, string keyName)
 		{
 			using var connection = GetConnection();

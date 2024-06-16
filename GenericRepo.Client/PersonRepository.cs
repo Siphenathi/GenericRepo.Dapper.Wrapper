@@ -28,6 +28,11 @@ namespace GenericRepo.Client
 			return await _personRepository.GetAsync(code, PrimaryKeyName);
 		}
 
+		public async Task<int> InsertOrUpdatePersonAsync(Person person)
+		{
+			return await _personRepository.InsertOrUpdateAsync(person.Code, PrimaryKeyName, person);
+		}
+
 		public async Task<int> AddPersonAsync(Person person)
 		{
 			return await _personRepository.InsertAsync(person, PrimaryKeyName);

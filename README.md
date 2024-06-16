@@ -39,7 +39,7 @@ Key | Description
 ------------ | ------------
 Id | Id is a table key
 keyName | keyName is a unique Column name ie primary key (Id, code).
-namesOfPropertiesToBeExcluded | names of columns that their values cannot be changed/columns that are keys ie Composite key, Id Number, Foreign Key, Candidate Key etc. You can provide as many as you want.
+namesOfColumnsToBeExcluded | names of columns that their values cannot be changed/columns that are keys ie Composite key, Id Number, Foreign Key, Candidate Key etc. You can provide as many as you want.
 T entity | T represent the table/entity.
 
 ```C#
@@ -48,8 +48,9 @@ public interface IRepository<T>
   Task<IEnumerable<T>> GetAllAsync();
   Task<T> GetAsync(object id, string keyName);
   Task<IEnumerable<T>> GetAllAsync(object id, string keyName);
-  Task<int> InsertAsync(T entity, params string[] namesOfPropertiesToBeExcluded);
-  Task<int> UpdateAsync(string keyName, T entity, params string[] namesOfPropertiesToBeExcluded);
+  Task<int> InsertOrUpdateAsync(object id, string keyName, TEntity entity, params string[] namesOfColumnsToBeExcluded);
+  Task<int> InsertAsync(T entity, params string[] namesOfColumnsToBeExcluded);
+  Task<int> UpdateAsync(string keyName, T entity, params string[] namesOfColumnsToBeExcluded);
   Task<int> DeleteAsync(object id, string keyName);
 }
 ```
@@ -61,7 +62,7 @@ public interface IRepository<T>
 public class PersonRepository
 {
   private readonly IRepository<Person> _personRepository;
-  private const string TableName = "dbo.Persons";  //NB: prefix the table schema your table belongs to
+  private const string TableName = "dbo.Persons";  //NB: If your table has schema then add schema name as prefix
   private const string keyName = "Code";
 
   
@@ -103,7 +104,7 @@ connectionString | A connection string is a string that specifies information ab
 databaseProvider | Enum that contains different database provider names ie MsSql, MySql, Oracle, PostGreSql n SqLite.
 procName | Name of the stored procedure that will be using to query/manipulate data.
 parameters | These are key-value pairs that are required when calling stored procedure.
-object | Key-value pairs/object that consist of a name(s) that are tied to the stored procdure variable(s).
+object | Key-value pairs/object that consist of a name(s) that are tied to the stored procedure variable(s).
 T entity | T is the model.
 
 ```C#
