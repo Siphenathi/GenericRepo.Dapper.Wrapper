@@ -44,29 +44,35 @@ namespace GenericRepo.Client.Tests
 		}
 
 		[Test]
-		public async Task GetPerson_WhenCalled_ShouldReturnPerson()
+		public async Task GetPerson_WhenCalledWithPersonCode_ShouldReturnPerson()
 		{
 			//Arrange
 			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 
 			//Act
-			var actual = await sut.GetPersonAsync(1);
+			var actual = await sut.GetPersonAsync(new Dictionary<string, object>
+			{
+				{"code", 1 }
+			});
 
 			//Assert
 			actual.Should().NotBeNull();
 		}
 
 		[Test]
-		public void GetPerson_WhenCalledWithNonExistingPersonCode_ShouldThrowException()
+		public async Task GetPerson_WhenCalledWithNonExistingPersonCode_ShouldThrowException()
 		{
 			//Arrange
 			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 
 			//Act
-			var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.GetPersonAsync(1264949526));
+			var actual = await sut.GetPersonAsync(new Dictionary<string, object>
+			{
+				{"code", 1023 }
+			});
 
 			//Assert
-			Assert.AreEqual("dbo.Person with Code [1264949526] could not be found.", exception.Message);
+			actual.Should().BeNull();
 		}
 
 		[Test]
@@ -76,13 +82,17 @@ namespace GenericRepo.Client.Tests
 			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
 			var person = new Person
 			{
+				Code = 75,
 				Name = "Person1",
 				Surname = "Person1",
-				Id_Number = "9501045305082"
+				Id_Number = "950GO45305082"
 			};
 
 			//Act
-			var actual = await sut.InsertOrUpdatePersonAsync(person);
+			var actual = await sut.InsertOrUpdatePersonAsync(new Dictionary<string, object>
+			{
+				{"code", 75 }
+			}, person, "code");
 
 			//Assert
 			actual.Should().Be(expectedNumberOfRowsToBeAffected);
@@ -101,7 +111,7 @@ namespace GenericRepo.Client.Tests
 			};
 
 			//Act
-			var actual = await sut.AddPersonAsync(person);
+			var actual = await sut.AddPersonAsync(person, "code");
 
 			//Assert
 			actual.Should().Be(expectedNumberOfRowsToBeAffected);
@@ -115,20 +125,23 @@ namespace GenericRepo.Client.Tests
 			var person = new Person
 			{
 				Code = 72,
-				Name = "Nathi",
-				Surname = "Pantshwa Hlanga",
+				Name = "Sindisiwe Zinhle",
+				Surname = "Kubheka",
 				Id_Number = "9x01045404082"
 			};
 
 			//act
-			var actual = await sut.UpdatePersonAsync(person);
+			var actual = await sut.UpdatePersonAsync(new Dictionary<string, object>
+			{
+				{"code", 72 }
+			}, person, "Code");
 
 			//Assert
 			actual.Should().Be(1);
 		}
 
 		[Test]
-		public void UpdatePerson_WhenCalledWithNonExistentPerson_ShouldThrowArException()
+		public async Task UpdatePerson_WhenCalledWithNonExistentPerson_ShouldNotUpdateTable()
 		{
 			//Arrange
 			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
@@ -141,24 +154,29 @@ namespace GenericRepo.Client.Tests
 			};
 
 			//act
-			var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.UpdatePersonAsync(person));
+			var actual = await sut.UpdatePersonAsync(new Dictionary<string, object>
+			{
+				{"Code", 7000 }
+			}, person, "code");
 
 			//Assert
-			Assert.AreEqual("dbo.Person with Code [7000] could not be found.", exception.Message);
+			actual.Should().Be(0);
 		}
 
 		[Test]
-		public void DeletePerson_WhenCalledWithNonExistentCode_ShouldThrowException()
+		public async Task DeletePerson_WhenCalledWithNonExistentCode_ShouldThrowException()
 		{
 			//Arrange 
 			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
-			var code = 1000;
 
 			//Act
-			var actual = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.DeletePersonAsync(code));
+			var actual = await sut.DeletePersonAsync(new Dictionary<string, object>
+			{
+				{"Code", 7000 }
+			});
 
 			//Assert
-			actual.Message.Should().Be("dbo.Person with Code [1000] could not be found.");
+			actual.Should().Be(0);
 		}
 
 		[Test]
@@ -166,14 +184,15 @@ namespace GenericRepo.Client.Tests
 		{
 			//Arrange 
 			var sut = CreatePersonRepository(ConnectionString, DatabaseProvider);
-			var numberOfRowsAffected = 1;
-			var code = 72;
 
 			//Act
-			var actual = await sut.DeletePersonAsync(code);
+			var actual = await sut.DeletePersonAsync(new Dictionary<string, object>
+			{
+				{"Code", 72 }
+			});
 
 			//Assert
-			actual.Should().Be(numberOfRowsAffected);
+			actual.Should().Be(1);
 		}
 
 		private static IPersonRepository CreatePersonRepository(string connectionString, DatabaseProvider databaseProvider)

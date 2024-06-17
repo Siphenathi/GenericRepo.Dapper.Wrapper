@@ -12,7 +12,6 @@ namespace GenericRepo.Client
 	{
 		private readonly IRepository<Person> _personRepository;
 		private const string TableName = "dbo.Persons";
-		private const string PrimaryKeyName = "Code";
 		public PersonRepository(string connectionString, DatabaseProvider databaseProvider)
 		{
 			_personRepository = new Repository<Person>(TableName, connectionString, databaseProvider);
@@ -23,33 +22,29 @@ namespace GenericRepo.Client
 			return await _personRepository.GetAllAsync();
 		}
 
-		public async Task<Person> GetPersonAsync(int code)
+		public async Task<Person> GetPersonAsync(Dictionary<string, object> parameters)
 		{
-			return await _personRepository.GetAsync(code, PrimaryKeyName);
+			return await _personRepository.GetAsync(parameters);
 		}
 
-		public async Task<int> InsertOrUpdatePersonAsync(Person person)
+		public async Task<int> InsertOrUpdatePersonAsync(Dictionary<string, object> parameters, Person person, params string[] namesOfColumnsToBeExcluded)
 		{
-			return await _personRepository.InsertOrUpdateAsync(person.Code, PrimaryKeyName, person);
+			return await _personRepository.InsertOrUpdateAsync(parameters, person, namesOfColumnsToBeExcluded);
 		}
 
-		public async Task<int> AddPersonAsync(Person person)
+		public async Task<int> AddPersonAsync(Person person, params string[] namesOfColumnsToBeExcluded)
 		{
-			return await _personRepository.InsertAsync(person, PrimaryKeyName);
+			return await _personRepository.InsertAsync(person, namesOfColumnsToBeExcluded);
 		}
 
-		public async Task<int> UpdatePersonAsync(Person person)
+		public async Task<int> UpdatePersonAsync(Dictionary<string, object> parameters, Person person, params string[] namesOfColumnsToBeExcluded)
 		{
-			var numberOfRowsAffected = await _personRepository.UpdateAsync(PrimaryKeyName, person, "Id_Number");
-			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[..^1]} with {PrimaryKeyName} [{person.Code}] could not be found.");
-			return numberOfRowsAffected;
+			return await _personRepository.UpdateAsync(parameters, person, namesOfColumnsToBeExcluded);
 		}
 
-		public async Task<int> DeletePersonAsync(int code)
+		public async Task<int> DeletePersonAsync(Dictionary<string, object> parameters)
 		{
-			var numberOfRowsAffected = await _personRepository.DeleteAsync(code, PrimaryKeyName);
-			if (numberOfRowsAffected == 0) throw new KeyNotFoundException($"{TableName[..^1]} with {PrimaryKeyName} [{code}] could not be found.");
-			return numberOfRowsAffected;
+			return await _personRepository.DeleteAsync(parameters);
 		}
 	}
 }

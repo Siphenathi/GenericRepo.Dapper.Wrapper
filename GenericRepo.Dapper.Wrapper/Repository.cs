@@ -26,64 +26,86 @@ namespace GenericRepo.Dapper.Wrapper
 			_databaseProvider = databaseProvider;
 		}
 
-		public async Task<IEnumerable<TEntity>> GetAllAsync()
+		async Task<IEnumerable<TEntity>> IRepository<TEntity>.GetAllAsync()
 		{
 			using var connection = GetConnection();
 			var result = await connection.QueryAsync<TEntity>($"Select * from {_tableName}");
 			return result;
 		}
 
-		public async Task<IEnumerable<TEntity>> GetAllAsync(object id, string keyName)
+		async Task<IEnumerable<TEntity>> IRepository<TEntity>.GetAllAsync(Dictionary<string, object> parameters)
 		{
 			using var connection = GetConnection();
-			var result = await connection.QueryAsync<TEntity>($"Select * from {_tableName} where {keyName}=@Id", new { Id = id });
+			var result = await connection.QueryAsync<TEntity>($"Select * from {_tableName} where " +
+			                                                  $"{EntityPropertyProcessor.GetFormatWhereClauseOfQueryStatement(parameters.Keys)}");
 			return result;
 		}
 
-		public async Task<int> InsertOrUpdateAsync(object id, string keyName, TEntity entity, params string[] namesOfColumnsToBeExcluded)
+		async Task<TEntity> IRepository<TEntity>.GetAsync(Dictionary<string, object> parameters)
 		{
-			var entityWeLookFor = await GetAsync(id, keyName);
-			return entityWeLookFor == null ? 
-				await InsertAsync(entity, namesOfColumnsToBeExcluded) : 
-				await UpdateAsync(keyName, entity, namesOfColumnsToBeExcluded);
+			return await GetAsync(parameters);
 		}
 
-		public async Task<TEntity> GetAsync(object id, string keyName)
+		async Task<int> IRepository<TEntity>.InsertOrUpdateAsync(Dictionary<string, object> parameters, TEntity entity, params string[] namesOfColumnsToBeExcluded)
 		{
+			var entityWeLookFor = await GetAsync(parameters);
+			return entityWeLookFor == null ?
+				await InsertAsync(entity, namesOfColumnsToBeExcluded) :
+				await UpdateAsync(parameters, entity, namesOfColumnsToBeExcluded);
+		}
+
+		async Task<int> IRepository<TEntity>.InsertAsync(TEntity entity, params string[] namesOfColumnsToBeExcluded)
+		{
+			return await InsertAsync(entity, namesOfColumnsToBeExcluded);
+		}
+
+		async Task<int> IRepository<TEntity>.UpdateAsync(Dictionary<string, object> parameters, TEntity entity, params string[] namesOfColumnsToBeExcluded)
+		{
+			return await UpdateAsync(parameters, entity, namesOfColumnsToBeExcluded);
+		}
+
+		async Task<int> IRepository<TEntity>.DeleteAsync(Dictionary<string, object> parameters)
+		{
+			if (parameters == null || !parameters.Any())
+				return 0;
+
 			using var connection = GetConnection();
-			var getRecordQuery = $"Select * from {_tableName} where {keyName}=@Id";
-			var result = await connection.QuerySingleOrDefaultAsync<TEntity>(getRecordQuery, new { Id = id });
-			return result;
+			var deleteQuery = $"delete from {_tableName} where {EntityPropertyProcessor.GetFormatWhereClauseOfQueryStatement(parameters.Keys)}";
+			return await connection.ExecuteAsync(deleteQuery, new DynamicParameters(parameters));
 		}
 
-		public async Task<int> InsertAsync(TEntity entity, params string[] namesOfColumnsToBeExcluded)
+		private async Task<TEntity> GetAsync(Dictionary<string, object> parameters)
 		{
-			var entityPropertyProcessorResponse = EntityPropertyProcessor.FormatQueryStatementBody<TEntity>(QueryStatement.InsertQuery, namesOfColumnsToBeExcluded);
+			if (parameters == null || !parameters.Any())
+				return default(TEntity);
+			using var connection = GetConnection();
+			var getRecordQuery = $"Select * from {_tableName} where " +
+			                     $"{EntityPropertyProcessor.GetFormatWhereClauseOfQueryStatement(parameters.Keys)}";
+			return await connection.QuerySingleOrDefaultAsync<TEntity>(getRecordQuery, new DynamicParameters(parameters));
+		}
+
+		private async Task<int> InsertAsync(TEntity entity, params string[] namesOfColumnsToBeExcluded)
+		{
+			var entityPropertyProcessorResponse = EntityPropertyProcessor.GetFormatQueryStatementBody<TEntity>(QueryStatement.InsertQuery, namesOfColumnsToBeExcluded);
 			if (entityPropertyProcessorResponse.Error != null)
 				throw new Exception(entityPropertyProcessorResponse.Error.Message);
 
-			var insertQuery = $"Insert into {_tableName} {entityPropertyProcessorResponse.Result}";
+			var insertQuery = $"insert into {_tableName} {entityPropertyProcessorResponse.Result}";
 			using var connection = GetConnection();
 			return await connection.ExecuteAsync(insertQuery, entity);
 		}
 
-		public async Task<int> UpdateAsync(string keyName, TEntity entity, params string[] namesOfColumnsToBeExcluded)
+		private async Task<int> UpdateAsync(Dictionary<string, object> parameters, TEntity entity,
+			params string[] namesOfColumnsToBeExcluded)
 		{
-			namesOfColumnsToBeExcluded = AddToList(namesOfColumnsToBeExcluded, keyName, false).ToArray();
-			var entityPropertyProcessorResponse = EntityPropertyProcessor.FormatQueryStatementBody<TEntity>(QueryStatement.UpdateQuery, namesOfColumnsToBeExcluded);
+			var entityPropertyProcessorResponse = EntityPropertyProcessor.GetFormatQueryStatementBody<TEntity>(QueryStatement.UpdateQuery, namesOfColumnsToBeExcluded);
 			if (entityPropertyProcessorResponse.Error != null)
 				throw new Exception(entityPropertyProcessorResponse.Error.Message);
 
-			var updateQuery = $"update {_tableName} set {entityPropertyProcessorResponse.Result} where {keyName}=@{keyName}";
 			using var connection = GetConnection();
+			var updateQuery = $"update {_tableName} set {entityPropertyProcessorResponse.Result} where " +
+			                  $"{EntityPropertyProcessor.GetFormatWhereClauseOfQueryStatement(parameters.Keys)}";
 			return await connection.ExecuteAsync(updateQuery, entity);
-		}
-
-		public async Task<int> DeleteAsync(object id, string keyName)
-		{
-			var deleteQuery = $"delete from {_tableName} where {keyName}=@Id";
-			using var connection = GetConnection();
-			return await connection.ExecuteAsync(deleteQuery, new { Id = id });
 		}
 
 		private IDbConnection GetConnection()
@@ -96,14 +118,6 @@ namespace GenericRepo.Dapper.Wrapper
 				DatabaseProvider.PostGreSql => new NpgsqlConnection(_connectionString),
 				_ => new SqlConnection(_connectionString)
 			};
-		}
-
-		private static IEnumerable<string> AddToList(IEnumerable<string> collection, string value, bool allowDuplicate)
-		{
-			var currentList = collection.ToList();
-			if (!allowDuplicate && currentList.Contains(value)) return currentList;
-			currentList.Add(value);
-			return currentList;
 		}
 	}
 }

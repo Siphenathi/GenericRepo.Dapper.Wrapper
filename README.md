@@ -15,7 +15,7 @@ This is a c# library that provides a simple Generic Repository to fluently map m
 
 NuGet | Support |
 ------------ | ------------
-Latest [version 3.1.1](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/#versions-body-tab) | All C# stack (.Net Core, .Net Framework, .Net Standard and many more)
+Latest [version 3.3.1](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/#versions-body-tab) | All C# stack (.Net Core, .Net Framework, .Net Standard and many more)
 
 ## Dependencies
 
@@ -30,28 +30,27 @@ Latest [version 3.1.1](https://www.nuget.org/packages/GenericDapperRepo.Wrapper/
 ## Download
 
 ```
-Install-Package GenericDapperRepo.Wrapper -Version 3.1.1
+Install-Package GenericDapperRepo.Wrapper -Version 3.3.1
 ```
 
 ## Usage
 
 Key | Description
 ------------ | ------------
-Id | Id is a table key
-keyName | keyName is a unique Column name ie primary key (Id, code).
-namesOfColumnsToBeExcluded | names of columns that their values cannot be changed/columns that are keys ie Composite key, Id Number, Foreign Key, Candidate Key etc. You can provide as many as you want.
+parameters | Refers to key-value pair that is used to filter for record, it consist of column name and value.
+namesOfColumnsToBeExcluded | names of columns you do not want to change/affect when executing your function ie Composite key, Id Number, Foreign Key, Candidate Key etc. You can provide as many as you want.
 T entity | T represent the table/entity.
 
 ```C#
 public interface IRepository<T>
 {
-  Task<IEnumerable<T>> GetAllAsync();
-  Task<T> GetAsync(object id, string keyName);
-  Task<IEnumerable<T>> GetAllAsync(object id, string keyName);
-  Task<int> InsertOrUpdateAsync(object id, string keyName, TEntity entity, params string[] namesOfColumnsToBeExcluded);
-  Task<int> InsertAsync(T entity, params string[] namesOfColumnsToBeExcluded);
-  Task<int> UpdateAsync(string keyName, T entity, params string[] namesOfColumnsToBeExcluded);
-  Task<int> DeleteAsync(object id, string keyName);
+		Task<IEnumerable<T>> GetAllAsync();
+		Task<IEnumerable<T>> GetAllAsync(Dictionary<string, object> parameters);
+		Task<T> GetAsync(Dictionary<string, object> parameters);
+		Task<int> InsertAsync(T entity, params string[] namesOfColumnsToBeExcluded);
+		Task<int> UpdateAsync(Dictionary<string, object> parameters, T entity, params string[] namesOfColumnsToBeExcluded);
+		Task<int> InsertOrUpdateAsync(Dictionary<string, object> parameters, T entity, params string[] namesOfColumnsToBeExcluded);
+		Task<int> DeleteAsync(Dictionary<string, object> parameters);
 }
 ```
 
@@ -63,9 +62,7 @@ public class PersonRepository
 {
   private readonly IRepository<Person> _personRepository;
   private const string TableName = "dbo.Persons";  //NB: If your table has schema then add schema name as prefix
-  private const string keyName = "Code";
 
-  
   public PersonRepository(string connectionString, DatabaseProvider databaseProvider)
   {
     _personRepository = new Repository<Person>(TableName, connectionString, databaseProvider);
@@ -91,10 +88,41 @@ public async Task<IEnumerable<Person>> GetAllPeopleAsync()
 {
   return await _personRepository.GetAllAsync();
 }
+
+public async Task<User> GetUserAsync(Dictionary<string, object> parameters)
+{
+	return await _userRepository.GetAsync(parameters);
+}
+
+public async Task<int> UpdateUserAsync(Dictionary<string, object> parameters, User user, params string[] namesOfColumnsToBeExcluded)
+{
+	return await _userRepository.UpdateAsync(parameters, user, namesOfColumnsToBeExcluded);
+}
+```
+- How you pass your parameters
+```C#
+var parameters = new Dictionary<string, object>
+{
+    {"Id","1cdaf7fe-0fab-42ca-ad1a-3ef6eb9201dd"} //"Id" is the column name and what follows is the value
+                                                  // Here, we can add another column in our filter
+}
+
+var user = await sut.GetUserAsync(parameters);
+var userModel = new User
+{
+	Id = "9af79d4d-4be3-4431-a798-62363b380a5e",
+	FirstName = "Siphenathi",
+	LastNames = "Pantshwa",
+	IdNumber = "9200000000000000",
+	Email = "spantshwa.lukho@gmail.com",
+	EntryDate = DateTime.Now,
+	NormalizedUserName = "SPANTSHWA",
+	UserName = "spantshwa"
+};
+var rowsAffected = await sut.UpdateUserAsync(parameters, userModel, "Id");
 ```
 
 - For other available functions check IRepository interface provided at the top
-
 # Working with Stored Procedures
 
 ## Usage

@@ -110,6 +110,18 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 		}
 
 		[Test]
+		public void FormatQueryStatementBody_WhenCalledWithInsertQueryStatementAndNullColumnsToBeExcluded_ShouldReturnErrorMessage()
+		{
+			//Arrange
+
+			//Act
+			var actual = EntityPropertyProcessor.GetFormatQueryStatementBody<TestingObject>(QueryStatement.InsertQuery, null);
+
+			//Assert
+			actual.Error.Message.Should().Be("namesOfColumnsToBeExcluded cannot be empty");
+		}
+
+		[Test]
 		public void FormatQueryStatementBody_WhenCalledWithInsertQueryStatement_ShouldReturnInsertFormattedQueryStatementBody()
 		{
 			//Arrange
@@ -119,7 +131,7 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 			};
 
 			//Act
-			var actual = EntityPropertyProcessor.FormatQueryStatementBody<TestingObject>(QueryStatement.InsertQuery);
+			var actual = EntityPropertyProcessor.GetFormatQueryStatementBody<TestingObject>(QueryStatement.InsertQuery);
 
 			//Assert
 			actual.Should().BeEquivalentTo(expectedListOfProperties);
@@ -136,7 +148,7 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 			};
 
 			//Act
-			var actual = EntityPropertyProcessor.FormatQueryStatementBody<TestingObject>(QueryStatement.InsertQuery, propertyToBeRemoved);
+			var actual = EntityPropertyProcessor.GetFormatQueryStatementBody<TestingObject>(QueryStatement.InsertQuery, propertyToBeRemoved);
 
 			//Assert
 			actual.Should().BeEquivalentTo(expectedList);
@@ -152,7 +164,7 @@ namespace GenericRepo.Dapper.Wrapper.Tests
 			};
 
 			//Act
-			var actual = EntityPropertyProcessor.FormatQueryStatementBody<TestingObject>(QueryStatement.UpdateQuery);
+			var actual = EntityPropertyProcessor.GetFormatQueryStatementBody<TestingObject>(QueryStatement.UpdateQuery);
 
 			//Assert
 			actual.Should().BeEquivalentTo(expectedListOfProperties);

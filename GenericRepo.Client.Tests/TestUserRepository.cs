@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -42,26 +43,32 @@ namespace GenericRepo.Client.Tests
 		}
 
 		[Test]
-		public async Task GetUser_WhenCalled_ShouldReturnUser()
+		public async Task GetUser_WhenCalledUserKey_ShouldReturnUser()
 		{
 			//Arrange
 			var sut = CreateUserRepository(ConnectionString, DatabaseProvider);
 
 			//Act
-			var actual = await sut.GetUserAsync("9af79d4d-4be3-4431-a798-62363b380a5y");
+			var actual = await sut.GetUserAsync(new Dictionary<string, object>
+			{
+				{"Id","1cdaf7fe-0fab-42ca-ad1a-3ef6eb9201dd"}
+			});
 
 			//Assert
 			actual.Should().NotBeNull();
 		}
 
 		[Test]
-		public async Task GetUserByUsername_WhenCalled_ShouldReturnUser()
+		public async Task GetUser_WhenCalledWithUsername_ShouldReturnUser()
 		{
 			//Arrange
 			var sut = CreateUserRepository(ConnectionString, DatabaseProvider);
 
 			//Act
-			var actual = await sut.GetUserByUsernameAsync("saider");
+			var actual = await sut.GetUserAsync(new Dictionary<string, object>
+			{
+				{"username","tandile"}
+			});
 
 			//Assert
 			actual.Should().NotBeNull();
@@ -71,7 +78,6 @@ namespace GenericRepo.Client.Tests
 		[Ignore("Transaction scope is not working")]
 		public async Task AddUser_WhenCalledWithUser_ShouldSaveUser()
 		{
-			var expectedNumberOfRowsToBeAffected = 1;
 			var sut = CreateUserRepository(ConnectionString, DatabaseProvider);
 			var user = new User
 			{
@@ -86,7 +92,7 @@ namespace GenericRepo.Client.Tests
 			var actual = await sut.AddUserAsync(user);
 
 			//Assert
-			actual.Should().Be(expectedNumberOfRowsToBeAffected);
+			actual.Should().Be(1);
 		}
 
 		[Test]
@@ -97,22 +103,28 @@ namespace GenericRepo.Client.Tests
 			var sut = CreateUserRepository(ConnectionString, DatabaseProvider);
 			var user = new User
 			{
-				Id = "0f59895c-b3a3-48e9-b6d3-1e492e987bd1",
+				Id = "9af79d4d-4be3-4431-a798-62363b380a5e",
 				FirstName = "Siphenathi",
 				LastNames = "Pantshwa",
-				IdNumber = "9501045404088",
-				Email = "user@gmail.com"
+				IdNumber = "9500000000000000",
+				Email = "spantshwa.lukho@gmail.com",
+				EntryDate = DateTime.Now,
+				NormalizedUserName = "SPANTSHWA",
+				UserName = "spantshwa"
 			};
 
 			//act
-			var actual = await sut.UpdateUserAsync(user);
+			var actual = await sut.UpdateUserAsync(new Dictionary<string, object>
+			{
+				{"Id","9af79d4d-4be3-4431-a798-62363b380a5e"}
+			}, user, "Id");
 
 			//Assert
 			actual.Should().Be(1);
 		}
 
 		[Test]
-		public void UpdateUser_WhenCalledWithNonExistentUser_ShouldThrowArException()
+		public async Task UpdateUser_WhenCalledWithNonExistentUser_ShouldNotUpdateUser()
 		{
 			//Arrange
 			var sut = CreateUserRepository(ConnectionString, DatabaseProvider);
@@ -126,24 +138,29 @@ namespace GenericRepo.Client.Tests
 			};
 
 			//act
-			var exception = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.UpdateUserAsync(user));
+			var actual = await sut.UpdateUserAsync(new Dictionary<string, object>
+			{
+				{"Id","9af79d4d-4be3-4431-a798-62363b380a5e"}
+			}, user, "Id");
 
 			//Assert
-			Assert.AreEqual("User with Id [0f59895c-b3a3-48e9-b6d3-1e492e987bd9] could not be found.", exception.Message);
+			actual.Should().Be(0);
 		}
 
 		[Test]
-		public void DeleteUser_WhenCalledWithNonExistentCode_ShouldThrowException()
+		public async Task DeleteUser_WhenCalledWithNonExistentUser_ShouldNotDeleteUser()
 		{
 			//Arrange 
 			var sut = CreateUserRepository(ConnectionString, DatabaseProvider);
-			const string id = "0f59895c-b3a3-48e9-b6d3-1e492e987bd3";
 
-			//Act
-			var actual = Assert.ThrowsAsync<KeyNotFoundException>(() => sut.DeleteUserAsync(id));
+			//act
+			var actual = await sut.DeleteUserAsync(new Dictionary<string, object>
+			{
+				{"Id","9af79d4d-4be3-4431-a798-62363b380a5e"}
+			});
 
 			//Assert
-			actual.Message.Should().Be("User with Id [0f59895c-b3a3-48e9-b6d3-1e492e987bd3] could not be found.");
+			actual.Should().Be(0);
 		}
 
 		[Test]
@@ -152,14 +169,15 @@ namespace GenericRepo.Client.Tests
 		{
 			//Arrange 
 			var sut = CreateUserRepository(ConnectionString, DatabaseProvider);
-			var numberOfRowsAffected = 1;
-			var id = "ea9c3087-2d3e-4e91-9050-3cde3ce7c995";
 
 			//Act
-			var actual = await sut.DeleteUserAsync(id);
+			var actual = await sut.DeleteUserAsync(new Dictionary<string, object>
+			{
+				{"Id","ea9c3087-2d3e-4e91-9050-3cde3ce7c995"}
+			});
 
 			//Assert
-			actual.Should().Be(numberOfRowsAffected);
+			actual.Should().Be(1);
 		}
 
 		private static IUserRepository CreateUserRepository(string connectionString, DatabaseProvider databaseProvider)
