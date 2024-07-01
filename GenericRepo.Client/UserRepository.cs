@@ -21,6 +21,11 @@ namespace GenericRepo.Client
 			return await _userRepository.GetAllAsync();
 		}
 
+		public async Task<IEnumerable<User>> GetAllUserAsync(Dictionary<string, object> parameters)
+		{
+			return await _userRepository.GetAllAsync(parameters);
+		}
+
 		public async Task<User> GetUserAsync(Dictionary<string, object> parameters)
 		{
 			return await _userRepository.GetAsync(parameters);

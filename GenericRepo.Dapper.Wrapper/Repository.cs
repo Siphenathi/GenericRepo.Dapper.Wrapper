@@ -36,9 +36,8 @@ namespace GenericRepo.Dapper.Wrapper
 		async Task<IEnumerable<TEntity>> IRepository<TEntity>.GetAllAsync(Dictionary<string, object> parameters)
 		{
 			using var connection = GetConnection();
-			var result = await connection.QueryAsync<TEntity>($"Select * from {_tableName} where " +
-			                                                  $"{EntityPropertyProcessor.GetFormatWhereClauseOfQueryStatement(parameters.Keys)}");
-			return result;
+			var sqlQuery = $"Select * from {_tableName} where {EntityPropertyProcessor.GetFormatWhereClauseOfQueryStatement(parameters.Keys)}";
+			return await connection.QueryAsync<TEntity>(sqlQuery, new DynamicParameters(parameters));
 		}
 
 		async Task<TEntity> IRepository<TEntity>.GetAsync(Dictionary<string, object> parameters)

@@ -43,6 +43,23 @@ namespace GenericRepo.Client.Tests
 		}
 
 		[Test]
+		public async Task GetAllUser_WhenCalledListOfParameters_ShouldReturnAllUser()
+		{
+			//Arrange
+			var sut = CreateUserRepository(ConnectionString, DatabaseProvider);
+
+			//Act
+			var actual = await sut.GetAllUserAsync(new Dictionary<string, object>
+			{
+				{"Id","1cdaf7fe-0fab-42ca-ad1a-3ef6eb9201dd"},
+				{"FirstName", "Tandile"}
+			});
+
+			//Assert
+			Assert.IsTrue(actual.Any(), "Database must not be empty");
+		}
+
+		[Test]
 		public async Task GetUser_WhenCalledUserKey_ShouldReturnUser()
 		{
 			//Arrange
