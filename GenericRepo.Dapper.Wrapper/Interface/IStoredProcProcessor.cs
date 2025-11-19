@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Dapper;
 
 namespace GenericRepo.Dapper.Wrapper.Interface
 {
